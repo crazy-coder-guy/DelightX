@@ -1,0 +1,36 @@
+
+.navbar-brand {
+    font-family: "Righteous", sans-serif;
+    font-size: larger;
+}
+
+@media (min-width: 768px) { /* Targeting desktop view */
+    .img-fluid {
+        max-width: fit-content;
+        max-height: 250px; /* Adjust the height as needed */
+        margin: 5px; /* Adjust the margin to reduce the gap */
+    }
+    
+    .g-2 { /* Adjust the gap class */
+        margin-left: -5px; /* Reduces the left margin */
+        margin-right: -5px; /* Reduces the right margin */
+    }
+    h5.mb-3 {
+        font-size: 1.8rem; /* Adjust the size as needed */
+    }
+    .navbar .navbar-brand,
+    .navbar .nav-link,
+    .navbar .form-control {
+        font-size: 1.8rem; /* Adjust the size as needed */
+    }
+
+    @media (min-width: 768px) { /* Optional: increase size only on desktop */
+        .navbar .navbar-brand,
+        .navbar .nav-link,
+        .navbar .form-control {
+            font-size: 1.2rem; /* Adjust the size as needed */
+        }
+    }
+
+}
+
