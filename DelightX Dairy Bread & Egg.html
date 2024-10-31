@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DelightX</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Righteous&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh; /* Full viewport height */
+        }
+
+        .column {
+            height: 100%; /* Full height */
+        }
+
+        .black {
+            width: 10%; /* Default width for desktop */
+            background-color: rgb(255, 255, 255);
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding: 10px; /* Add padding to the column */
+        }
+
+        .green {
+            width: 90%; /* 90% width for the green column */
+            background-color: rgb(68, 68, 68);
+        }
+
+        .card {
+            background-color: white; /* Card background */
+            margin-bottom: 10px; /* Space between cards */
+            padding: 10px; /* Internal padding */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        .card img {
+            width: 100%; /* Fit image within the card */
+            height: auto; /* Maintain aspect ratio */
+        }
+        /* Custom Scrollbar Styles */
+.black {
+    width: 10%; /* Default width for desktop */
+    background-color: rgb(255, 255, 255);
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 1px; /* Add padding to the column */
+}
+
+/* Scrollbar styles for WebKit browsers (Chrome, Safari) */
+.black::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.black::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Background of the scrollbar track */
+    border-radius: 10px; /* Rounded corners */
+}
+
+.black::-webkit-scrollbar-thumb {
+    background: #888; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded corners */
+}
+
+.black::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color of the thumb on hover */
+}
+
+/* Scrollbar styles for Firefox */
+.black {
+    scrollbar-width: thin; /* "auto" or "thin" */
+    scrollbar-color: #888 #f1f1f1; /* thumb and track color */
+}
+
+       @media (max-width: 768px) {
+    .black {
+        width: 30%; /* Full width for mobile */
+        padding: 0; /* Remove padding */
+    }
+    .green {
+        width: 100%; /* Full width for mobile */
+       
+        position: absolute; /* Position it absolutely */
+        top: 0; /* Align to the top */
+        left: 30; /* Align to the left */
+        height: 100%; /* Full height */
+        z-index: -1; /* Send it behind the cards */
+    }
+}
+
+
+        @media (min-width: 992px) {
+            .bottom-nav {
+                display: none; /* Hide bottom nav on larger screens */
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-light d-lg-none sticky-top">
+        <div class="container-fluid justify-content-between">
+            <a class="navbar-brand" href="#">DelightX</a>
+            <button class="btn btn-outline-secondary" type="button" aria-label="Search" data-bs-toggle="offcanvas" data-bs-target="#searchOffcanvas">
+                <i class="fa-solid fa-magnifying-glass fa-fade"></i>
+            </button>
+        </div>
+    </nav>
+    
+
+<div class="offcanvas offcanvas-end offcanvas-full" tabindex="-1" id="searchOffcanvas" aria-labelledby="searchOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 id="searchOffcanvasLabel">Search</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <input type="text" class="form-control" placeholder="Search for over 500 products" autofocus>
+    </div>
+</div>
+
+<!-- Desktop Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light d-none d-lg-block">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">DelightX</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        More
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="moreDropdown">
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Help</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success me-2" type="submit">Search</button>
+                <button class="btn btn-outline-secondary" type="button" aria-label="Cart">
+                    <i class="fa-solid fa-cart-shopping fa-bounce"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- Bottom Navigation for Mobile -->
+<nav class="navbar navbar-light bg-light fixed-bottom d-lg-none bottom-nav">
+    <div class="container-fluid justify-content-around">
+        <a class="nav-link text-center" href="DelightX-Home.html">
+            <i class="fas fa-home fa-lg"></i>
+            <div>Home</div>
+        </a>
+        <a class="nav-link text-center" href="#">
+            <i class="fas fa-user fa-lg"></i>
+            <div>Profile</div>
+        </a>
+        <a class="nav-link text-center" href="#">
+            <i class="fas fa-ellipsis-h fa-lg"></i>
+            <div>More</div>
+        </a>
+        <a class="nav-link text-center" href="#">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+            <div>Cart</div>
+        </a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="column black">
+        <div class="card">
+            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/4b28a9a2-8714-455c-ad17-fa765bbc3576.png" alt="Image 1">
+        </div>
+        <div class="card">
+            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/8d4d3977-5197-49d9-9867-8a670524e48b.png" alt="Image 2">
+        </div>
+        <div class="card">
+            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/ab241d87-da5b-4830-b38f-1a6cd30d0d41.png" alt="Image 3">
+        </div>
+        <div class="card">
+            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/4b28a9a2-8714-455c-ad17-fa765bbc3576.png" alt="Image 1">
+        </div>
+        <div class="card">
+            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/8d4d3977-5197-49d9-9867-8a670524e48b.png" alt="Image 2">
+        </div>
+        <div class="card">
+            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/ab241d87-da5b-4830-b38f-1a6cd30d0d41.png" alt="Image 3">
+        </div>
+        <!-- Add more cards as needed -->
+    </div>
+    <div class="column green"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
