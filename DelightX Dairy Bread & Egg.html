@@ -25,6 +25,7 @@
         .container {
             display: flex;
             height: 100vh; /* Full viewport height */
+            position: relative; /* Allow absolute positioning */
         }
 
         .column {
@@ -36,11 +37,17 @@
             background-color: rgb(255, 255, 255);
             overflow-y: auto; /* Enable vertical scrolling */
             padding: 10px; /* Add padding to the column */
+            margin-left: -5%; /* Move the black column slightly to the left */
         }
 
         .green {
-            width: 90%; /* 90% width for the green column */
+            width: 90%; /* Default width for desktop */
             background-color: rgb(68, 68, 68);
+            position: absolute; /* Position absolutely */
+            top: 0; /* Align to the top */
+            left: 10%; /* Align to the left according to black column width */
+            height: 100%; /* Full height */
+            z-index: -1; /* Send it behind the cards */
         }
 
         .card {
@@ -54,55 +61,18 @@
             width: 100%; /* Fit image within the card */
             height: auto; /* Maintain aspect ratio */
         }
-        /* Custom Scrollbar Styles */
-.black {
-    width: 10%; /* Default width for desktop */
-    background-color: rgb(255, 255, 255);
-    overflow-y: auto; /* Enable vertical scrolling */
-    padding: 1px; /* Add padding to the column */
-}
 
-/* Scrollbar styles for WebKit browsers (Chrome, Safari) */
-.black::-webkit-scrollbar {
-    width: 8px; /* Width of the scrollbar */
-}
-
-.black::-webkit-scrollbar-track {
-    background: #f1f1f1; /* Background of the scrollbar track */
-    border-radius: 10px; /* Rounded corners */
-}
-
-.black::-webkit-scrollbar-thumb {
-    background: #888; /* Color of the scrollbar thumb */
-    border-radius: 10px; /* Rounded corners */
-}
-
-.black::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Color of the thumb on hover */
-}
-
-/* Scrollbar styles for Firefox */
-.black {
-    scrollbar-width: thin; /* "auto" or "thin" */
-    scrollbar-color: #888 #f1f1f1; /* thumb and track color */
-}
-
-       @media (max-width: 768px) {
-    .black {
-        width: 30%; /* Full width for mobile */
-        padding: 0; /* Remove padding */
-    }
-    .green {
-        width: 100%; /* Full width for mobile */
-       
-        position: absolute; /* Position it absolutely */
-        top: 0; /* Align to the top */
-        left: 30; /* Align to the left */
-        height: 100%; /* Full height */
-        z-index: -1; /* Send it behind the cards */
-    }
-}
-
+        @media (max-width: 768px) {
+            .black {
+                width: 30%; /* Full width for mobile */
+                padding: 0; /* Remove padding */
+                margin-left: -5%; /* Adjust left margin for mobile as well */
+            }
+            .green {
+                width: 70%; /* Adjust width for mobile */
+                left: 30%; /* Align to the left according to black column width */
+            }
+        }
 
         @media (min-width: 992px) {
             .bottom-nav {
@@ -110,20 +80,18 @@
             }
         }
 
-
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-light bg-light d-lg-none sticky-top">
-        <div class="container-fluid justify-content-between">
-            <a class="navbar-brand" href="#">DelightX</a>
-            <button class="btn btn-outline-secondary" type="button" aria-label="Search" data-bs-toggle="offcanvas" data-bs-target="#searchOffcanvas">
-                <i class="fa-solid fa-magnifying-glass fa-fade"></i>
-            </button>
-        </div>
-    </nav>
-    
+<nav class="navbar navbar-light bg-light d-lg-none sticky-top">
+    <div class="container-fluid justify-content-between">
+        <a class="navbar-brand" href="#">DelightX</a>
+        <button class="btn btn-outline-secondary" type="button" aria-label="Search" data-bs-toggle="offcanvas" data-bs-target="#searchOffcanvas">
+            <i class="fa-solid fa-magnifying-glass fa-fade"></i>
+        </button>
+    </div>
+</nav>
 
 <div class="offcanvas offcanvas-end offcanvas-full" tabindex="-1" id="searchOffcanvas" aria-labelledby="searchOffcanvasLabel">
     <div class="offcanvas-header">
@@ -213,7 +181,6 @@
         <div class="card">
             <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/ab241d87-da5b-4830-b38f-1a6cd30d0d41.png" alt="Image 3">
         </div>
-        <!-- Add more cards as needed -->
     </div>
     <div class="column green"></div>
 </div>
