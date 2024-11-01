@@ -15,10 +15,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
 }
 
 body, html {
     height: 100%;
+    
 }
 
 .container {
@@ -86,7 +88,9 @@ body, html {
     line-height: 1;
     font-size: 0.875rem;
     padding: 5px; /* Removed padding */
+    
 }
+
 
 .skeleton-loader {
     display: flex;
@@ -105,9 +109,7 @@ body, html {
     animation: shimmer 1.5s infinite;
 }
 
-.loading {
-    opacity: 0.8; /* Slightly adjust opacity if needed */
-}
+
 
 /* Reduced font sizes for product card text */
 .product-card .card-title,
@@ -494,13 +496,14 @@ body, html {
         productBody.className = 'card-body text-left';
 
         const productBrand = document.createElement('p');
-        productBrand.className = 'card-title brand-name'; // Added brand-name class
-        productBrand.textContent = product.brandName;
-        productBody.appendChild(productBrand);
+productBrand.className = 'card-title brand-name'; // Added brand-name class
+productBrand.textContent = product.brandName; // Convert to uppercase
+productBody.appendChild(productBrand);
+
 
         const productName = document.createElement('p');
         productName.className = 'card-title';
-        productName.textContent = product.productName;
+        productName.textContent = product.productName.toUpperCase();
         productBody.appendChild(productName);
 
         const productLabel = document.createElement('span');
