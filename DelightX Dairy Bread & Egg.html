@@ -425,7 +425,7 @@ body, html {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
-    import { getDatabase, ref, get, child, set, remove, onValue } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
+    import { getDatabase, ref, get, child, set, remove } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -531,6 +531,7 @@ body, html {
         productDisplay.innerHTML = '';
 
         const imageLoadPromises = [];
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
 
         for (const product of products) {
             const productCard = document.createElement('div');
@@ -637,7 +638,6 @@ body, html {
             const buttonText = document.createTextNode('Add to Cart');
             addToCartButton.appendChild(buttonText);
 
-            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
             if (cartItems[product.id]) {
                 addToCartButton.style.backgroundColor = 'black';
                 buttonText.textContent = 'Remove Item';
@@ -699,7 +699,7 @@ body, html {
                 localStorage.setItem('userLocation', JSON.stringify(userLocation));
                 fetchProductsByCategory('Pasta and Noodles');
             } else {
-                promptForLocation(); 
+                promptForLocation();
             }
         } else {
             console.log("User is not logged in. Redirecting to index.html.");
@@ -746,6 +746,10 @@ body, html {
         }
 
         const cartRef = ref(database, `carts/${currentUserUid}/${product.id}`);
+         // Remove item from local storage
+         const cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
+        delete cartItems[product.id]; // Remove the item from local storage
+        localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Update local storage
         try {
             await remove(cartRef);
             console.log(`Removed ${product.productName} from cart with ID ${product.id}.`);
