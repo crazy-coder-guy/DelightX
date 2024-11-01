@@ -80,7 +80,7 @@ body, html {
 
 .card img {
     width: 100%; /* Fit image within the card */
-    height: 90px; /* Increased height for images */
+    height: 130px; /* Increased height for images */
     object-fit: cover; /* Cover image without distortion */
     border-radius: 10px 10px 0 0; /* Match card style */
 }
@@ -583,69 +583,41 @@ body, html {
             qtyContainer.className = 'd-flex align-items-center qty-container mt-1';
 
             const qtyLabel = document.createElement('span');
-        qtyLabel.textContent = 'QTY:';
-        qtyLabel.className = 'me-1';
+            qtyLabel.textContent = 'QTY:';
+            qtyLabel.className = 'me-1';
 
-        const qtyDisplay = document.createElement('span');
-        const storedItem = cartItems[product.id];
-        const initialQuantity = storedItem ? storedItem.quantity : 1; // Default to 1 if not in cart
-        qtyDisplay.textContent = initialQuantity; // Set initial quantity from local storage
-        qtyDisplay.className = 'qty-display-container me-1';
-
-
-        const minusButton = document.createElement('button');
-        const minusIcon = document.createElement('i');
-        minusIcon.className = 'fa-solid fa-minus';
-        minusIcon.style.fontSize = '0.5rem';
-        minusButton.appendChild(minusIcon);
-        minusButton.className = 'btn btn-secondary btn-sm me-1';
-        minusButton.onclick = () => {
-            let currentQty = parseInt(qtyDisplay.textContent);
-            if (currentQty > 1) {
-                currentQty--;
-                qtyDisplay.textContent = currentQty;
-
-                // Update quantity in local storage if already in cart
-                if (cartItems[product.id]) {
-                    cartItems[product.id].quantity = currentQty;
-                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-
-                    // Update Firebase as well
-                    set(ref(database, `carts/${currentUserUid}/${product.id}`), {
-                        ...cartItems[product.id],
-                        totalPrice: (cartItems[product.id].finalPrice * currentQty).toFixed(2)
-                    });
+            const minusButton = document.createElement('button');
+            const minusIcon = document.createElement('i');
+            minusIcon.className = 'fa-solid fa-minus';
+            minusIcon.style.fontSize = '0.5rem';
+            minusButton.appendChild(minusIcon);
+            minusButton.className = 'btn btn-secondary btn-sm me-1';
+            minusButton.onclick = () => {
+                let currentQty = parseInt(qtyDisplay.textContent);
+                if (currentQty > 1) {
+                    currentQty--;
+                    qtyDisplay.textContent = currentQty;
                 }
-            }
-        };
+            };
 
+            const qtyDisplay = document.createElement('span');
+            qtyDisplay.textContent = '1';
+            qtyDisplay.className = 'qty-display-container me-1';
 
-        const plusButton = document.createElement('button');
-        const plusIcon = document.createElement('i');
-        plusIcon.className = 'fa-solid fa-plus';
-        plusIcon.style.fontSize = '0.5rem';
-        plusButton.appendChild(plusIcon);
-        plusButton.className = 'btn btn-secondary btn-sm';
-        plusButton.onclick = () => {
-            let currentQty = parseInt(qtyDisplay.textContent);
-            const maxQty = Math.min(5, product.stockAvailable);
-            if (currentQty < maxQty) {
-                currentQty++;
-                qtyDisplay.textContent = currentQty;
-
-                // Update quantity in local storage if already in cart
-                if (cartItems[product.id]) {
-                    cartItems[product.id].quantity = currentQty;
-                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-
-                    // Update Firebase as well
-                    set(ref(database, `carts/${currentUserUid}/${product.id}`), {
-                        ...cartItems[product.id],
-                        totalPrice: (cartItems[product.id].finalPrice * currentQty).toFixed(2)
-                    });
+            const plusButton = document.createElement('button');
+            const plusIcon = document.createElement('i');
+            plusIcon.className = 'fa-solid fa-plus';
+            plusIcon.style.fontSize = '0.5rem';
+            plusButton.appendChild(plusIcon);
+            plusButton.className = 'btn btn-secondary btn-sm';
+            plusButton.onclick = () => {
+                let currentQty = parseInt(qtyDisplay.textContent);
+                const maxQty = Math.min(5, product.stockAvailable);
+                if (currentQty < maxQty) {
+                    currentQty++;
+                    qtyDisplay.textContent = currentQty;
                 }
-            }
-        };
+            };
 
             qtyContainer.appendChild(qtyLabel);
             qtyContainer.appendChild(minusButton);
@@ -677,15 +649,7 @@ body, html {
                 const quantity = parseInt(qtyDisplay.textContent);
                 if (currentUserUid) {
                     if (cartItems[product.id]) {
-                        // Update quantity in local storage and Firebase
-                        cartItems[product.id].quantity = quantity;
-                        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-
-                        await set(ref(database, `carts/${currentUserUid}/${product.id}`), {
-                            ...cartItems[product.id],
-                            totalPrice: (cartItems[product.id].finalPrice * quantity).toFixed(2)
-                        });
-
+                        await removeFromCart(product);
                         addToCartButton.style.backgroundColor = '';
                         buttonText.textContent = 'Add to Cart';
                         delete cartItems[product.id]; // Remove from local storage
@@ -764,7 +728,7 @@ body, html {
             productType: product.productType,
             originalPrice: product.originalPrice,
             qtyUnit: product.qtyUnit,
-            quantity: product.quantity
+            availableQuantity: product.quantity
         };
 
         try {
@@ -794,7 +758,6 @@ body, html {
         }
     }
 </script>
-
 
 </body>
 </html>
