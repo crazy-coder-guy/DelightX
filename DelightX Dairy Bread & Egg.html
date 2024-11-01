@@ -11,147 +11,156 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@100;400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            height: 100%;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh; /* Full viewport height */
-        }
-
-        .column {
-            height: 100%; /* Full height */
-        }
-
-        .black {
-            position: fixed; /* Fixed positioning */
-            width: 10%; /* Default width for desktop */
-            background-color: rgb(255, 255, 255);
-            overflow-y: auto; /* Enable vertical scrolling */
-            padding: 15px; /* Add padding to the column */
-            margin-left: -5%; /* Move the black column slightly to the left */
-        }
-
-        .green {
-            margin-left: 10%; /* Leave space for the black column */
-            height: 100%; /* Ensure full height */
-            width: 85%; /* Adjusted width for product display */
-            background-color: rgb(255, 255, 255);
-            overflow-y: auto; /* Allow vertical scrolling */
-            overflow-x: hidden; /* Hide horizontal overflow */
-        }
-
-        .product-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between; /* Space between cards */
-        }
-
-        .card, .skeleton-card {
-            box-shadow: 0 2px 5px rgb(255, 255, 255); /* Add some shadow for aesthetics */
-            margin: 5px; /* Reduced margin */
-            padding: 15px; /* Reduced padding */
-            border: 1px solid #ddd; /* Optional border */
-            border-radius: 5px; /* Rounded corners */
-            flex: 1 1 calc(23% - 10px); /* 4 cards per row on desktop */
-        }
-
-        .product-card {
-            background-color: white;
-            width: 100%;
-            border-radius: 10px;
-            padding: 0; /* Removed padding */
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgb(255, 255, 255);
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            width: 350px; /* Adjusted width for cards */
-        }
-
-        .card img {
-            width: 100%; /* Fit image within the card */
-            height: 130px; /* Increased height for images */
-            object-fit: cover; /* Cover image without distortion */
-            border-radius: 10px 10px 0 0; /* Match card style */
-        }
-
-        .skeleton-loader {
-            display: flex;
-            flex-wrap: wrap; /* Allow skeleton cards to wrap */
-            justify-content: space-between; /* Space between skeleton cards */
-            width: 100%;
-        }
-
-        .skeleton-card {
-            flex: 1 1 calc(23% - 10px); /* 4 cards per row on desktop */
-            height: 130px; /* Increased height for skeleton cards */
-            margin: 5px; /* Ensure consistent spacing */
-            border-radius: 10px; /* Match product card radius */
-            background: linear-gradient(90deg, #e0e0e0 25%, #c0c0c0 50%, #e0e0e0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        .loading {
-            opacity: 0.8; /* Slightly adjust opacity if needed */
-        }
-
-        /* Reduced font sizes for product card text */
-        .product-card .card-title,
-        .product-card .qty-info,
-        .product-card .original-price,
-        .product-card .final-price {
-            font-size: 0.8rem; /* Adjust font size */
-        }
-
-        .product-card .brand-name {
-            font-weight: bold; /* Bold the brand name */
-        }
-
-        .qty-container {
-            justify-content: center; /* Center the buttons */
-            display: flex; /* Use flexbox for alignment */
-            align-items: center; /* Center vertically */
-        }
-
-        @media (max-width: 768px) {
-            .black {
-                width: 30%; /* Full width for mobile */
-                padding: 0; /* Remove padding */
-                margin-left: -5%; /* Adjust left margin for mobile */
-            }
-            .green {
-                width: 100%; /* Adjust width for mobile */
-                margin-left: 25%; /* Align to the left according to black column width */
-                
-            }
-            .card, .skeleton-card {
-                flex: 1 1 calc(50% - 10px); /* Increase card width to fit more on mobile */
-            }
-        }
-
-        @media (min-width: 992px) {
-            .bottom-nav {
-                display: none; /* Hide bottom nav on larger screens */
-            }
-        }
-        
-        
-.card-img-top {
-    height: 100px !important; /* Force the height to 80px */
-    object-fit:contain;
-    border-top-left-radius: 6px; /* Smaller radius */
-    border-top-right-radius: 6px; /* Smaller radius */
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Reduced border thickness */
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
+body, html {
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+}
+
+.column {
+    height: 100%; /* Full height */
+}
+
+.black {
+    position: fixed; /* Fixed positioning */
+    width: 10%; /* Default width for desktop */
+    background-color: rgb(255, 255, 255);
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 15px; /* Add padding to the column */
+    margin-left: -5%; /* Move the black column slightly to the left */
+}
+
+.green {
+    margin-left: 10%; /* Leave space for the black column */
+    height: 100%; /* Ensure full height */
+    width: 85%; /* Adjusted width for product display */
+    background-color: rgb(255, 255, 255);
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal overflow */
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Space between cards */
+}
+
+.card, .skeleton-card {
+    box-shadow: 0 2px 5px rgb(255, 255, 255); /* Add some shadow for aesthetics */
+    margin: 5px; /* Reduced margin */
+    padding: 15px; /* Reduced padding */
+    border: 1px solid #ddd; /* Optional border */
+    border-radius: 5px; /* Rounded corners */
+    flex: 1 1 calc(23% - 10px); /* 4 cards per row on desktop */
+}
+
+.product-card {
+    background-color: white;
+    width: 100%;
+    border-radius: 10px;
+    padding: 0; /* Removed padding */
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgb(255, 255, 255);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 350px; /* Adjusted width for cards */
+}
+
+.card img {
+    width: 100%; /* Fit image within the card */
+    height: 130px; /* Increased height for images */
+    object-fit: cover; /* Cover image without distortion */
+    border-radius: 10px 10px 0 0; /* Match card style */
+}
+.card-body {
+    line-height: 1;
+    font-size: 0.875rem;
+    padding: 5px; /* Removed padding */
+}
+
+.skeleton-loader {
+    display: flex;
+    flex-wrap: wrap; /* Allow skeleton cards to wrap */
+    justify-content: space-between; /* Space between skeleton cards */
+    width: 100%;
+}
+
+.skeleton-card {
+    flex: 1 1 calc(23% - 10px); /* 4 cards per row on desktop */
+    height: 200px; /* Increased height for skeleton cards */
+    margin: 5px; /* Ensure consistent spacing */
+    border-radius: 10px; /* Match product card radius */
+    background: linear-gradient(90deg, #e0e0e0 25%, #c0c0c0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.loading {
+    opacity: 0.8; /* Slightly adjust opacity if needed */
+}
+
+/* Reduced font sizes for product card text */
+.product-card .card-title,
+.product-card .qty-info,
+.product-card .original-price,
+.product-card .final-price {
+    font-size: 0.8rem; /* Adjust font size */
+}
+
+.product-card .brand-name {
+    font-weight: bold; /* Bold the brand name */
+    color: black; /* Pure black color */
+}
+
+.product-card .card-title {
+    font-weight: 600; /* Increased font weight */
+    color: rgba(80, 80, 80, 0.8); /* Light black color */
+}
+
+.qty-container {
+    justify-content: center; /* Center the buttons */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center vertically */
+}
+
+@media (max-width: 768px) {
+    .black {
+        width: 30%; /* Full width for mobile */
+        padding: 0; /* Remove padding */
+        margin-left: -5%; /* Adjust left margin for mobile */
+    }
+    .green {
+        width: 100%; /* Adjust width for mobile */
+        margin-left: 25%; /* Align to the left according to black column width */
+    }
+    .card, .skeleton-card {
+        flex: 1 1 calc(50% - 10px); /* Increase card width to fit more on mobile */
+    }
+}
+
+@media (min-width: 992px) {
+    .bottom-nav {
+        display: none; /* Hide bottom nav on larger screens */
+    }
+}
+
+.card-img-top {
+        height: 100px !important;
+        object-fit: contain;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
 
 .category-container {
     position: relative;
@@ -169,12 +178,13 @@
 
 .card-body h5 {
     text-align: left; /* Align product title to left */
-    text-transform: uppercase; /* Make title lowercase */
+    text-transform: uppercase; /* Make title uppercase */
     font-size: 0.8rem;
 }
 
 .qty-container {
     margin-top: 0;
+    margin: 0;
 }
 
 .btn-primary {
@@ -182,12 +192,12 @@
     border: none;
     border-radius: 25px;
     transition: background-color 0.3s, transform 0.3s; /* Added transform for hover effect */
-    padding: 10px 0;
+    padding: 10px ;
     margin-top: 10px;
 }
 
 .btn.add {
-  background-color: #347928;
+    background-color: #347928;
     color: #ffffff; /* Text color */
     border: none; /* Remove default border */
     border-radius: 4px; /* Optional: rounded corners */
@@ -199,6 +209,7 @@
     overflow-x: hidden;
     white-space: nowrap;
 }
+
 .price-container {
     display: flex;
     align-items: center; /* Center items vertically */
@@ -228,23 +239,19 @@
 
 .card-title {
     font-size: 0.8em; /* Default font size */
-    white-space: noWrap; /* Prevent text wrapping */
+    white-space: nowrap; /* Prevent text wrapping */
     overflow: hidden; /* Hide overflow */
     text-overflow: ellipsis; /* Add ellipsis for overflowing text */
 }
-.qty-info
-{
+
+.qty-info {
     margin-bottom: 10px;
 }
 
 .qty-container {
     display: flex;
     align-items: center; /* Center items vertically */
-}
-
-.qty-container {
-    display: flex;
-    align-items: center; /* Center items vertically */
+    margin: 0; /* Removed margin */
 }
 
 .qty-display-container {
@@ -256,7 +263,6 @@
 }
 
 .btn {
-  
     margin: 0px; /* No margin between buttons */
     background-color: green; /* Green background for buttons */
     color: white; /* White text for buttons */
@@ -267,6 +273,7 @@
 .btn:hover {
     background-color: darkgreen; /* Darker green on hover */
 }
+
 .btn-add-to-cart {
     background-color: green; /* Green background */
     color: white; /* White text */
@@ -276,12 +283,25 @@
     font-size: 12px; /* Font size */
     cursor: pointer; /* Pointer cursor on hover */
     transition: background-color 0.3s; /* Smooth background color transition */
-    justify-items: center;
+    justify-items: center; /* Center button contents */
+    margin: 0 auto; /* Center the button horizontally */
+    display: flex; /* Flexbox for centering */
+    align-items: center; /* Center vertically */
 }
 
 .btn-add-to-cart:hover {
     background-color: #218838; /* Darker green on hover */
 }
+
+/* Quantity button styles */
+.qty-button {
+    width: 40px; /* Fixed width for minus button */
+}
+
+.qty-button.add {
+    width: 50px; /* Slightly larger width for add button */
+}
+
 
     </style>
 
@@ -502,19 +522,20 @@
         priceContainer.appendChild(finalPriceElement);
         productBody.appendChild(priceContainer);
 
-    
-
         // Quantity buttons
         const qtyContainer = document.createElement('div');
-        qtyContainer.className = 'd-flex align-items-center qty-container mt-2';
+        qtyContainer.className = 'd-flex align-items-center qty-container mt-1';
 
         const qtyLabel = document.createElement('span');
         qtyLabel.textContent = 'QTY:';
-        qtyLabel.className = 'me-2';
+        qtyLabel.className = 'me-1';
 
         const minusButton = document.createElement('button');
-        minusButton.textContent = '-';
-        minusButton.className = 'btn btn-secondary btn-sm';
+        const minusIcon = document.createElement('i');
+        minusIcon.className = 'fa-solid fa-minus'; // Add the minus icon class
+        minusIcon.style.fontSize = '0.5rem'; // Adjust size as neede
+        minusButton.appendChild(minusIcon); // Append the icon to the button
+        minusButton.className = 'btn btn-secondary btn-sm me-1';
         minusButton.onclick = () => {
             let currentQty = parseInt(qtyDisplay.textContent);
             if (currentQty > 1) { // Prevent going below 1
@@ -523,12 +544,16 @@
             }
         };
 
+
         const qtyDisplay = document.createElement('span');
         qtyDisplay.textContent = '1'; // Start with 1 by default
-        qtyDisplay.className = 'qty-display-container me-2';
-
+        qtyDisplay.className = 'qty-display-container me-1';
+        
         const plusButton = document.createElement('button');
-        plusButton.textContent = '+';
+        const plusIcon = document.createElement('i');
+        plusIcon.className = 'fa-solid fa-plus'; // Add the plus icon class
+        plusIcon.style.fontSize = '0.5rem'; // Adjust size as neede
+        plusButton.appendChild(plusIcon); // Append the icon to the button
         plusButton.className = 'btn btn-secondary btn-sm';
         plusButton.onclick = () => {
             let currentQty = parseInt(qtyDisplay.textContent);
@@ -538,6 +563,7 @@
                 qtyDisplay.textContent = currentQty;
             }
         };
+
 
         qtyContainer.appendChild(qtyLabel);
         qtyContainer.appendChild(minusButton);
@@ -551,7 +577,7 @@ addToCartButton.className = 'btn-add-to-cart mt-2'; // Use the new class
 
 // Create the icon element
 const cartIcon = document.createElement('i');
-cartIcon.className = 'fa-solid fa-basket-shopping fa-fade'; // Set the icon classes
+cartIcon.className = 'fa-solid fa-basket-shopping fa-fade '; // Set the icon classes
 
 // Append the icon to the button
 addToCartButton.appendChild(cartIcon);
