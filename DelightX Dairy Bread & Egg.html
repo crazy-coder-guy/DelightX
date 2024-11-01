@@ -120,13 +120,13 @@ body, html {
 .product-card .brand-name {
     font-weight: bold; /* Bold the brand name */
     color: black; /* Pure black color */
-    font-size: medium;
+    font-size: 1rem
 }
 
 .card-title {
     font-weight: 600; /* Increased font weight */
     color: rgba(0, 0, 0, 0.8); /* Light black color */
-    font-size: large;
+    font-size: 1.2rem
 }
 
 .qty-container {
@@ -176,6 +176,7 @@ body, html {
 .card-body {
     line-height: 1; /* Keep existing line height */
     font-size: 0.875rem;
+    margin: 0;
 }
 
 .card-body h5 {
@@ -292,6 +293,9 @@ body, html {
     display: flex; /* Flexbox for centering */
     align-items: center; /* Center vertically */
 }
+.top-category {
+    margin-left: 15px; /* or use padding-left */
+}
 
 .btn-add-to-cart:hover {
     background-color: #218838; /* Darker green on hover */
@@ -387,7 +391,7 @@ body, html {
 
 <div class="container">
     <div class="column black">
-        <h5>Categories</h5>
+        <h5 class="top-category">Categories</h5>
         <div class="card" onclick="fetchProductsByCategory('Pasta and Noodles')">
             <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/4b28a9a2-8714-455c-ad17-fa765bbc3576.png" alt="Pasta and Noodles">
         </div>
