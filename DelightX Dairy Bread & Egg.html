@@ -444,6 +444,7 @@ body, html {
     const auth = getAuth(app);
 
     let currentUserUid = null; // Declare currentUserUid globally
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || {}; // Load cart items from localStorage
 
     // Show the skeleton loader on initial load
     function showSkeletonLoader() {
@@ -636,6 +637,7 @@ body, html {
             addToCartButton.style.display = 'flex';
             addToCartButton.style.alignItems = 'center';
             addToCartButton.style.justifyContent = 'center';
+            addToCartButton.setAttribute('data-product-id', product.id); // Set data attribute
 
             const cartIcon = document.createElement('i');
             cartIcon.className = 'fa-solid fa-basket-shopping fa-fade me-2';
@@ -643,6 +645,13 @@ body, html {
             addToCartButton.appendChild(cartIcon);
             const buttonText = document.createTextNode('Add to Cart');
             addToCartButton.appendChild(buttonText);
+
+            // Check if the product is already in the cart
+            if (cartItems[product.id]) {
+                addToCartButton.innerHTML = '<i class="fa-solid fa-basket-shopping fa-bounce me-2"></i> Already in Cart';
+                addToCartButton.disabled = true;
+                addToCartButton.style.backgroundColor = 'black'; // Change button color to black
+            }
 
             // Ensure product.id is set for adding to cart
             product.id = product.id || `product_${Math.random().toString(36).substr(2, 9)}`; // Generate a random ID if not present
@@ -729,12 +738,25 @@ body, html {
 
         try {
             await set(cartRef, cartItem);
-            console.log(`Added ${quantity} of ${product.productName} to cart with ID ${product.id}.`);
+            console.log('Product added to cart:', cartItem);
+
+            // Update the cartItems in localStorage
+            cartItems[product.id] = cartItem;
+            localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Store in local storage
+
+            // Update the add to cart button instead of re-rendering the entire products list
+            const addToCartButton = document.querySelector(`[data-product-id="${product.id}"]`);
+            addToCartButton.className = 'btn add w-100';
+            addToCartButton.innerHTML = '<i class="fa-solid fa-basket-shopping fa-bounce me-2 "></i>in Cart';
+            addToCartButton.disabled = true;
+            addToCartButton.style.backgroundColor = '#000000'; // Change button color to black
+
         } catch (error) {
             console.error('Error adding item to cart:', error);
         }
     }
 
 </script>
+
 </body>
 </html>
