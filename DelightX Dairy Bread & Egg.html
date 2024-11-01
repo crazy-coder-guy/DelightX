@@ -35,14 +35,14 @@
             width: 10%; /* Default width for desktop */
             background-color: rgb(255, 255, 255);
             overflow-y: auto; /* Enable vertical scrolling */
-            padding: 10px; /* Add padding to the column */
+            padding: 15px; /* Add padding to the column */
             margin-left: -5%; /* Move the black column slightly to the left */
         }
 
         .green {
             margin-left: 10%; /* Leave space for the black column */
             height: 100%; /* Ensure full height */
-            width: 100%; /* Adjust width */
+            width: 85%; /* Adjusted width for product display */
             background-color: rgb(255, 255, 255);
             overflow-y: auto; /* Allow vertical scrolling */
             overflow-x: hidden; /* Hide horizontal overflow */
@@ -55,7 +55,7 @@
         }
 
         .card, .skeleton-card {
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add some shadow for aesthetics */
+            box-shadow: 0 2px 5px rgb(255, 255, 255); /* Add some shadow for aesthetics */
             margin: 5px; /* Reduced margin */
             padding: 15px; /* Reduced padding */
             border: 1px solid #ddd; /* Optional border */
@@ -65,18 +65,20 @@
 
         .product-card {
             background-color: white;
+            width: 100%;
             border-radius: 10px;
             padding: 0; /* Removed padding */
             margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgb(255, 255, 255);
             text-decoration: none;
             color: inherit;
             display: block;
+            width: 350px; /* Adjusted width for cards */
         }
 
         .card img {
             width: 100%; /* Fit image within the card */
-            height: 120px; /* Reduced height for images */
+            height: 130px; /* Increased height for images */
             object-fit: cover; /* Cover image without distortion */
             border-radius: 10px 10px 0 0; /* Match card style */
         }
@@ -90,7 +92,7 @@
 
         .skeleton-card {
             flex: 1 1 calc(23% - 10px); /* 4 cards per row on desktop */
-            height: 120px; /* Match the reduced height of the product cards */
+            height: 130px; /* Increased height for skeleton cards */
             margin: 5px; /* Ensure consistent spacing */
             border-radius: 10px; /* Match product card radius */
             background: linear-gradient(90deg, #e0e0e0 25%, #c0c0c0 50%, #e0e0e0 75%);
@@ -102,6 +104,24 @@
             opacity: 0.8; /* Slightly adjust opacity if needed */
         }
 
+        /* Reduced font sizes for product card text */
+        .product-card .card-title,
+        .product-card .qty-info,
+        .product-card .original-price,
+        .product-card .final-price {
+            font-size: 0.8rem; /* Adjust font size */
+        }
+
+        .product-card .brand-name {
+            font-weight: bold; /* Bold the brand name */
+        }
+
+        .qty-container {
+            justify-content: center; /* Center the buttons */
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center vertically */
+        }
+
         @media (max-width: 768px) {
             .black {
                 width: 30%; /* Full width for mobile */
@@ -109,11 +129,12 @@
                 margin-left: -5%; /* Adjust left margin for mobile */
             }
             .green {
-                width: 70%; /* Adjust width for mobile */
-                margin-left: 30%; /* Align to the left according to black column width */
+                width: 100%; /* Adjust width for mobile */
+                margin-left: 25%; /* Align to the left according to black column width */
+                
             }
             .card, .skeleton-card {
-                flex: 1 1 calc(45% - 10px); /* Increase card width to fit more on mobile */
+                flex: 1 1 calc(50% - 10px); /* Increase card width to fit more on mobile */
             }
         }
 
@@ -122,6 +143,145 @@
                 display: none; /* Hide bottom nav on larger screens */
             }
         }
+        
+        
+.card-img-top {
+    height: 100px !important; /* Force the height to 80px */
+    object-fit:contain;
+    border-top-left-radius: 6px; /* Smaller radius */
+    border-top-right-radius: 6px; /* Smaller radius */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Reduced border thickness */
+}
+
+.category-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 10px 0;
+}
+
+.card-body {
+    line-height: 1; /* Keep existing line height */
+    font-size: 0.875rem;
+}
+
+.card-body h5 {
+    text-align: left; /* Align product title to left */
+    text-transform: uppercase; /* Make title lowercase */
+    font-size: 0.8rem;
+}
+
+.qty-container {
+    margin-top: 0;
+}
+
+.btn-primary {
+    background-color: #347928;
+    border: none;
+    border-radius: 25px;
+    transition: background-color 0.3s, transform 0.3s; /* Added transform for hover effect */
+    padding: 10px 0;
+    margin-top: 10px;
+}
+
+.btn.add {
+  background-color: #347928;
+    color: #ffffff; /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Optional: rounded corners */
+    padding: 10px; /* Optional: padding for better spacing */
+    font-size: 16px; /* Optional: font size */
+}
+
+.overflow-auto {
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+.price-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Space between elements */
+    margin-bottom: 0; /* Ensure no extra margin at the bottom */
+}
+
+.discount-amount {
+    color: green; /* Green color for discount */
+    font-size: 0.875rem; /* Adjust font size */
+    line-height: 1; /* Ensure consistent line height */
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: rgb(80, 80, 80);
+    font-size: 0.875rem; /* Adjust font size */
+    line-height: 1; /* Ensure consistent line height */
+}
+
+.final-price {
+    color: green; /* Green color for final price */
+    font-weight: bold;
+    font-size: 0.875rem; /* Adjust font size */
+    line-height: 1; /* Ensure consistent line height */
+}
+
+.card-title {
+    font-size: 0.8em; /* Default font size */
+    white-space: noWrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+}
+.qty-info
+{
+    margin-bottom: 10px;
+}
+
+.qty-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+}
+
+.qty-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+}
+
+.qty-display-container {
+    margin: 0 0px; /* Add margin for spacing */
+    text-align: center; /* Center the text within the span */
+    background-color: rgb(255, 255, 255); /* White background for the quantity display */
+    padding: 1px; /* Add some padding for better spacing */
+    border-radius: 4px; /* Optional: rounded corners */
+}
+
+.btn {
+  
+    margin: 5px; /* No margin between buttons */
+    background-color: green; /* Green background for buttons */
+    color: white; /* White text for buttons */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Optional: rounded corners */
+}
+
+.btn:hover {
+    background-color: darkgreen; /* Darker green on hover */
+}
+.btn-add-to-cart {
+    background-color: #28a745; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Slightly rounded corners */
+    padding: 10px 15px; /* Padding for better size */
+    font-size: 14px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.btn-add-to-cart:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
     </style>
 
 </head>
@@ -195,17 +355,14 @@
         </a>
         <a class="nav-link text-center" href="#">
             <i class="fas fa-ellipsis-h fa-lg"></i>
-            <div>More</div>
-        </a>
-        <a class="nav-link text-center" href="#">
-            <i class="fas fa-shopping-cart fa-lg"></i>
-            <div>Cart</div>
+            <div>More </div>
         </a>
     </div>
 </nav>
 
 <div class="container">
     <div class="column black">
+        <h5>Categories</h5>
         <div class="card" onclick="fetchProductsByCategory('Pasta and Noodles')">
             <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/4b28a9a2-8714-455c-ad17-fa765bbc3576.png" alt="Pasta and Noodles">
         </div>
@@ -286,59 +443,141 @@
         });
     };
 
-    // Function to display products in the green column based on category
+
     async function displayProducts(products, category) {
-        const productDisplay = document.getElementById('productDisplay');
-        productDisplay.innerHTML = ''; // Clear previous products
+    const productDisplay = document.getElementById('productDisplay');
+    productDisplay.innerHTML = ''; // Clear previous products
 
-        const imageLoadPromises = [];
-        const filteredProducts = Object.values(products).filter(product => product.category === category);
+    const imageLoadPromises = [];
+    const filteredProducts = Object.values(products).filter(product => product.category === category);
 
-        for (const product of filteredProducts) {
-            const productCard = document.createElement('div');
-            productCard.className = 'card product-card';
-            productCard.style.width = '200px'; // Fixed width for cards
+    for (const product of filteredProducts) {
+        const productCard = document.createElement('div');
+        productCard.className = 'card product-card';
+        productCard.style.width = '250px'; // Fixed width for cards
 
-            const productImage = document.createElement('img');
-            productImage.src = product.imageURL;
-            productImage.className = 'card-img-top';
-            productCard.appendChild(productImage);
+        const productImage = document.createElement('img');
+        productImage.src = product.imageURL;
+        productImage.className = 'card-img-top';
+        productCard.appendChild(productImage);
 
-            const productBody = document.createElement('div');
-            productBody.className = 'card-body text-left';
+        const productBody = document.createElement('div');
+        productBody.className = 'card-body text-left';
 
-            const productName = document.createElement('h5');
-            productName.className = 'card-title';
-            productName.textContent = product.productName;
-            productBody.appendChild(productName);
+        const productBrand = document.createElement('p');
+        productBrand.className = 'card-title brand-name'; // Added brand-name class
+        productBrand.textContent = product.brandName;
+        productBody.appendChild(productBrand);
 
-            const productPrice = document.createElement('p');
-            productPrice.textContent = `Price: ₹${product.finalPrice}`;
-            productBody.appendChild(productPrice);
+        const productName = document.createElement('p');
+        productName.className = 'card-title';
+        productName.textContent = product.productName;
+        productBody.appendChild(productName);
 
-            productCard.appendChild(productBody);
-            productDisplay.appendChild(productCard);
+        const productLabel = document.createElement('span');
+        productLabel.className = 'new-info mb-2';
+        productLabel.textContent = product.productType;
 
-            // Load images
-            const imgElement = productCard.querySelector('.card-img-top');
-            const imageLoadPromise = new Promise((resolve) => {
-                imgElement.onload = () => {
-                    imgElement.style.display = 'block'; // Show the image once loaded
-                    resolve();
-                };
-                imgElement.onerror = () => {
-                    imgElement.style.display = 'block'; // Show a broken image icon or similar
-                    resolve();
-                };
-            });
+        const priceContainer = document.createElement('div');
+        priceContainer.className = 'price-container mb-2';
 
-            imageLoadPromises.push(imageLoadPromise);
-        }
+        const originalPrice = parseFloat(product.originalPrice);
+        const finalPrice = parseFloat(product.finalPrice);
 
-        // Wait for all images to load
-        await Promise.all(imageLoadPromises);
-        hideSkeletonLoader(); // Hide skeleton loader after all images have loaded
+        const originalPriceElement = document.createElement('span');
+        originalPriceElement.className = 'original-price';
+        originalPriceElement.innerHTML = `₹${Math.floor(originalPrice)}`; // No decimal
+
+        const finalPriceElement = document.createElement('span');
+        finalPriceElement.className = 'final-price';
+        finalPriceElement.innerHTML = `₹${Math.floor(finalPrice)}`; // No decimal
+
+        priceContainer.appendChild(originalPriceElement);
+        priceContainer.appendChild(finalPriceElement);
+        productBody.appendChild(priceContainer);
+
+        const qtyInfo = document.createElement('p');
+        qtyInfo.className = 'qty-info';
+        qtyInfo.textContent = `${product.quantity} ${product.qtyUnit}`; 
+        productBody.appendChild(qtyInfo);
+
+        // Quantity buttons
+        const qtyContainer = document.createElement('div');
+        qtyContainer.className = 'd-flex align-items-center qty-container mt-2';
+
+        const qtyLabel = document.createElement('span');
+        qtyLabel.textContent = 'QTY:';
+        qtyLabel.className = 'me-2';
+
+        const minusButton = document.createElement('button');
+        minusButton.textContent = '-';
+        minusButton.className = 'btn btn-secondary btn-sm';
+        minusButton.onclick = () => {
+            let currentQty = parseInt(qtyDisplay.textContent);
+            if (currentQty > 1) { // Prevent going below 1
+                currentQty--;
+                qtyDisplay.textContent = currentQty;
+            }
+        };
+
+        const qtyDisplay = document.createElement('span');
+        qtyDisplay.textContent = '1'; // Start with 1 by default
+        qtyDisplay.className = 'qty-display-container me-2';
+
+        const plusButton = document.createElement('button');
+        plusButton.textContent = '+';
+        plusButton.className = 'btn btn-secondary btn-sm';
+        plusButton.onclick = () => {
+            let currentQty = parseInt(qtyDisplay.textContent);
+            const maxQty = Math.min(5, product.stockAvailable);
+            if (currentQty < maxQty) {
+                currentQty++;
+                qtyDisplay.textContent = currentQty;
+            }
+        };
+
+        qtyContainer.appendChild(qtyLabel);
+        qtyContainer.appendChild(minusButton);
+        qtyContainer.appendChild(qtyDisplay);
+        qtyContainer.appendChild(plusButton);
+        productBody.appendChild(qtyContainer);
+
+        // Add to Cart button
+    const addToCartButton = document.createElement('button');
+    addToCartButton.textContent = 'Add to Cart';
+    addToCartButton.className = 'btn-add-to-cart mt-2'; // Use the new class
+    addToCartButton.onclick = () => {
+        const quantity = parseInt(qtyDisplay.textContent);
+        console.log(`Added ${quantity} of ${product.productName} to cart.`);
+        // Here you can call your add to cart function or API
+    };
+
+
+        productBody.appendChild(addToCartButton);
+        productCard.appendChild(productBody);
+        productDisplay.appendChild(productCard);
+
+        // Load images
+        const imgElement = productCard.querySelector('.card-img-top');
+        const imageLoadPromise = new Promise((resolve) => {
+            imgElement.onload = () => {
+                imgElement.style.display = 'block'; // Show the image once loaded
+                resolve();
+            };
+            imgElement.onerror = () => {
+                imgElement.style.display = 'block'; // Show a broken image icon or similar
+                resolve();
+            };
+        });
+
+        imageLoadPromises.push(imageLoadPromise);
     }
+
+    // Wait for all images to load
+    await Promise.all(imageLoadPromises);
+    hideSkeletonLoader(); // Hide skeleton loader after all images have loaded
+}
+
 
     // Show the skeleton loader before fetching products
     showSkeletonLoader();
