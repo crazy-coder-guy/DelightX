@@ -257,23 +257,23 @@
 
 .btn {
   
-    margin: 5px; /* No margin between buttons */
+    margin: 0px; /* No margin between buttons */
     background-color: green; /* Green background for buttons */
     color: white; /* White text for buttons */
     border: none; /* Remove default border */
-    border-radius: 4px; /* Optional: rounded corners */
+    border-radius: 5px; /* Optional: rounded corners */
 }
 
 .btn:hover {
     background-color: darkgreen; /* Darker green on hover */
 }
 .btn-add-to-cart {
-    background-color: #28a745; /* Green background */
+    background-color: green; /* Green background */
     color: white; /* White text */
     border: none; /* No border */
     border-radius: 5px; /* Slightly rounded corners */
-    padding: 10px 15px; /* Padding for better size */
-    font-size: 14px; /* Font size */
+    padding: 10px 10px; /* Padding for better size */
+    font-size: 12px; /* Font size */
     cursor: pointer; /* Pointer cursor on hover */
     transition: background-color 0.3s; /* Smooth background color transition */
 }
@@ -478,6 +478,11 @@
         productLabel.className = 'new-info mb-2';
         productLabel.textContent = product.productType;
 
+        const qtyInfo = document.createElement('p');
+        qtyInfo.className = 'qty-info';
+        qtyInfo.textContent = `${product.quantity} ${product.qtyUnit}`; 
+        productBody.appendChild(qtyInfo);
+
         const priceContainer = document.createElement('div');
         priceContainer.className = 'price-container mb-2';
 
@@ -496,10 +501,7 @@
         priceContainer.appendChild(finalPriceElement);
         productBody.appendChild(priceContainer);
 
-        const qtyInfo = document.createElement('p');
-        qtyInfo.className = 'qty-info';
-        qtyInfo.textContent = `${product.quantity} ${product.qtyUnit}`; 
-        productBody.appendChild(qtyInfo);
+    
 
         // Quantity buttons
         const qtyContainer = document.createElement('div');
@@ -542,15 +544,30 @@
         qtyContainer.appendChild(plusButton);
         productBody.appendChild(qtyContainer);
 
-        // Add to Cart button
-    const addToCartButton = document.createElement('button');
-    addToCartButton.textContent = 'Add to Cart';
-    addToCartButton.className = 'btn-add-to-cart mt-2'; // Use the new class
-    addToCartButton.onclick = () => {
-        const quantity = parseInt(qtyDisplay.textContent);
-        console.log(`Added ${quantity} of ${product.productName} to cart.`);
-        // Here you can call your add to cart function or API
-    };
+// Add to Cart button
+const addToCartButton = document.createElement('button');
+addToCartButton.className = 'btn-add-to-cart mt-2'; // Use the new class
+
+// Create the icon element
+const cartIcon = document.createElement('i');
+cartIcon.className = 'fa-solid fa-basket-shopping fa-fade'; // Set the icon classes
+
+// Append the icon to the button
+addToCartButton.appendChild(cartIcon);
+
+// Add the button text
+addToCartButton.appendChild(document.createTextNode(' Add to Cart'));
+
+// Set up the onclick event
+addToCartButton.onclick = () => {
+    const quantity = parseInt(qtyDisplay.textContent);
+    console.log(`Added ${quantity} of ${product.productName} to cart.`);
+    // Here you can call your add to cart function or API
+};
+
+// Append the button to the desired container (make sure to do this)
+document.body.appendChild(addToCartButton); // Change this to your specific container
+
 
 
         productBody.appendChild(addToCartButton);
