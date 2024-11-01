@@ -7,10 +7,9 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Righteous&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@100;400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -25,7 +24,6 @@
         .container {
             display: flex;
             height: 100vh; /* Full viewport height */
-            position: relative; /* Allow absolute positioning */
         }
 
         .column {
@@ -33,6 +31,7 @@
         }
 
         .black {
+            position: fixed; /* Fixed positioning */
             width: 10%; /* Default width for desktop */
             background-color: rgb(255, 255, 255);
             overflow-y: auto; /* Enable vertical scrolling */
@@ -41,25 +40,81 @@
         }
 
         .green {
-            width: 100%; /* Default width for desktop */
+            margin-left: 10%; /* Leave space for the black column */
+            height: 100%; /* Ensure full height */
+            width: 100%; /* Adjust width */
             background-color: rgb(68, 68, 68);
-            position: absolute; /* Position absolutely */
-            top: 0; /* Align to the top */
-            left: 0%; /* Align to the left according to black column width */
-            height: 100%; /* Full height */
-            z-index: -1; /* Send it behind the cards */
+            padding: 10px;
+            overflow-y: auto; /* Allow vertical scrolling */
+            overflow-x: hidden; /* Hide horizontal overflow */
         }
 
-        .card {
-            background-color: white; /* Card background */
-            margin-bottom: 10px; /* Space between cards */
-            padding: 10px; /* Internal padding */
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between; /* Space between cards */
+        }
+
+        .card, .skeleton-card {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add some shadow for aesthetics */
+            margin: 5px; /* Reduced margin */
+            padding: 10px; /* Reduced padding */
+            border: 1px solid #ddd; /* Optional border */
             border-radius: 5px; /* Rounded corners */
+            flex: 1 1 calc(50% - 10px); /* 2 cards per row on mobile */
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 0; /* Removed padding */
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         .card img {
             width: 100%; /* Fit image within the card */
-            height: auto; /* Maintain aspect ratio */
+            height: 150px; /* Adjusted height for images */
+            object-fit: cover; /* Cover image without distortion */
+            border-radius: 10px 10px 0 0; /* Match card style */
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 150px; /* Adjusted height for images */
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .skeleton-loader {
+            display: flex;
+            flex-wrap: wrap; /* Allow skeleton cards to wrap */
+            justify-content: space-between; /* Space between skeleton cards */
+        }
+
+        .skeleton-card {
+            flex: 1 1 calc(48% - 10px); /* Adjust for mobile to fit 2 per row */
+            height: 150px; /* Match the height of the product cards */
+            margin: 5px; /* Ensure consistent spacing */
+            border-radius: 10px; /* Match product card radius */
+            background: linear-gradient(90deg, #e0e0e0 25%, #c0c0c0 50%, #e0e0e0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        /* For desktop view */
+        @media (min-width: 768px) {
+            .skeleton-card {
+                flex: 1 1 calc(23% - 10px); /* Adjust for desktop to fit 4 per row */
+                height: 150px; /* Match the height you prefer for skeleton */
+            }
+        }
+
+        .loading {
+            opacity: 0.8; /* Slightly adjust opacity if needed */
         }
 
         @media (max-width: 768px) {
@@ -69,8 +124,8 @@
                 margin-left: -5%; /* Adjust left margin for mobile as well */
             }
             .green {
-                width: 75%; /* Adjust width for mobile */
-                left: 25%; /* Align to the left according to black column width */
+                width: 70%; /* Adjust width for mobile */
+                margin-left: 30%; /* Align to the left according to black column width */
             }
         }
 
@@ -79,8 +134,8 @@
                 display: none; /* Hide bottom nav on larger screens */
             }
         }
-
     </style>
+
 </head>
 <body>
 
@@ -163,28 +218,144 @@
 
 <div class="container">
     <div class="column black">
-        <div class="card">
-            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/4b28a9a2-8714-455c-ad17-fa765bbc3576.png" alt="Image 1">
+        <div class="card" onclick="fetchProductsByCategory('Pasta and Noodles')">
+            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/4b28a9a2-8714-455c-ad17-fa765bbc3576.png" alt="Pasta and Noodles">
         </div>
-        <div class="card">
-            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/8d4d3977-5197-49d9-9867-8a670524e48b.png" alt="Image 2">
+        <div class="card" onclick="fetchProductsByCategory('Spices and Seasonings')">
+            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/8d4d3977-5197-49d9-9867-8a670524e48b.png" alt="Masala & Dry Fruits">
         </div>
-        <div class="card">
-            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/ab241d87-da5b-4830-b38f-1a6cd30d0d41.png" alt="Image 3">
-        </div>
-        <div class="card">
-            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/4b28a9a2-8714-455c-ad17-fa765bbc3576.png" alt="Image 1">
-        </div>
-        <div class="card">
-            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/8d4d3977-5197-49d9-9867-8a670524e48b.png" alt="Image 2">
-        </div>
-        <div class="card">
-            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/ab241d87-da5b-4830-b38f-1a6cd30d0d41.png" alt="Image 3">
+        <div class="card" onclick="fetchProductsByCategory('Snacks')">
+            <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/ab241d87-da5b-4830-b38f-1a6cd30d0d41.png" alt="Snacks">
         </div>
     </div>
-    <div class="column green"></div>
+    
+    <div class="column green">
+        <div id="productDisplay" class="product-container">
+            <div class="skeleton-loader">
+                <!-- Skeleton loader content here -->
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyC7IZ7BhQPOy7CfEQLuJTOxdrTybBZTFO8",
+        authDomain: "delightx-in.firebaseapp.com",
+        databaseURL: "https://delightx-in-default-rtdb.firebaseio.com",
+        projectId: "delightx-in",
+        storageBucket: "delightx-in.appspot.com",
+        messagingSenderId: "554333595542",
+        appId: "1:554333595542:web:d445cd0bea3f1483c21fb7"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Show the skeleton loader on initial load
+    function showSkeletonLoader() {
+        const productDisplay = document.getElementById('productDisplay');
+        productDisplay.classList.add('loading');
+    }
+
+    // Function to hide the skeleton loader
+    function hideSkeletonLoader() {
+        const productDisplay = document.getElementById('productDisplay');
+        productDisplay.classList.remove('loading');
+    }
+
+    // Function to fetch products by category
+    window.fetchProductsByCategory = function(category) {
+        // Check for network status
+        if (!navigator.onLine) {
+            console.error("Client is offline");
+            return;
+        }
+
+        const dbRef = ref(database);
+        get(child(dbRef, `products`)).then((snapshot) => {
+            // Hide skeleton loader once data is fetched
+            if (snapshot.exists()) {
+                const products = snapshot.val();
+                displayProducts(products, category);
+            } else {
+                console.error("No products found");
+            }
+        }).catch((error) => {
+            hideSkeletonLoader();
+            console.error("Error fetching products: ", error);
+        });
+    };
+
+    // Function to display products in the green column based on category
+    async function displayProducts(products, category) {
+        const productDisplay = document.getElementById('productDisplay');
+        productDisplay.innerHTML = ''; // Clear previous products
+
+        const imageLoadPromises = [];
+        const filteredProducts = Object.values(products).filter(product => product.category === category);
+
+        for (const product of filteredProducts) {
+            const productCard = document.createElement('div');
+            productCard.className = 'card product-card';
+            productCard.style.width = '200px'; // Fixed width for cards
+
+            const productImage = document.createElement('img');
+            productImage.src = product.imageURL;
+            productImage.className = 'card-img-top';
+            productCard.appendChild(productImage);
+
+            const productBody = document.createElement('div');
+            productBody.className = 'card-body text-left';
+
+            const productName = document.createElement('h5');
+            productName.className = 'card-title';
+            productName.textContent = product.productName;
+            productBody.appendChild(productName);
+
+            const productPrice = document.createElement('p');
+            productPrice.textContent = `Price: ₹${product.finalPrice}`;
+            productBody.appendChild(productPrice);
+
+            productCard.appendChild(productBody);
+            productDisplay.appendChild(productCard);
+
+            // Load images
+            const imgElement = productCard.querySelector('.card-img-top');
+            const imageLoadPromise = new Promise((resolve) => {
+                imgElement.onload = () => {
+                    imgElement.style.display = 'block'; // Show the image once loaded
+                    resolve();
+                };
+                imgElement.onerror = () => {
+                    imgElement.style.display = 'block'; // Show a broken image icon or similar
+                    resolve();
+                };
+            });
+
+            imageLoadPromises.push(imageLoadPromise);
+        }
+
+        // Wait for all images to load
+        await Promise.all(imageLoadPromises);
+        hideSkeletonLoader(); // Hide skeleton loader after all images have loaded
+    }
+
+    // Show the skeleton loader before fetching products
+    showSkeletonLoader();
+    // Fetch products by default category (e.g., Pasta and Noodles)
+    fetchProductsByCategory('Pasta and Noodles');
+</script>
 </body>
 </html>
