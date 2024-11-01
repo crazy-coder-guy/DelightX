@@ -319,118 +319,62 @@ body {
 <script type="module">
   // Import Firebase libraries
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+  import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
   const firebaseConfig = {
-      apiKey: "AIzaSyAA73UhMVAKtqFUrp5oubCZuGdf-9QI2QA",
-      authDomain: "ragul-mart.firebaseapp.com",
-      databaseURL: "https://ragul-mart-default-rtdb.firebaseio.com",
-      projectId: "ragul-mart",
-      storageBucket: "ragul-mart.appspot.com",
-      messagingSenderId: "436984679273",
-      appId: "1:436984679273:web:f9a218c7c21f1c685d0bf8"
+    apiKey: "AIzaSyC7IZ7BhQPOy7CfEQLuJTOxdrTybBZTFO8",
+    authDomain: "delightx-in.firebaseapp.com",
+    databaseURL: "https://delightx-in-default-rtdb.firebaseio.com",
+    projectId: "delightx-in",
+    storageBucket: "delightx-in.appspot.com",
+    messagingSenderId: "554333595542",
+    appId: "1:554333595542:web:d445cd0bea3f1483c21fb7"
   };
-
+  
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const database = getDatabase(app);
 
   // Check if user is already authenticated
   onAuthStateChanged(auth, (user) => {
-      if (user) {
-          // Redirect to home if authenticated
-          window.location.href = 'DelightX-Home.html';
-      }
+    if (user) {
+      // Redirect to home if authenticated
+      window.location.href = 'DelightX-Home.html';
+    }
   });
-
-  // Function to store user data in Realtime Database
-  async function storeUserData(user) {
-      try {
-          await set(ref(database, 'users/' + user.uid), {
-              name: user.displayName || user.email.split('@')[0],
-              email: user.email,
-              device: navigator.userAgent,
-              createdAt: new Date().toISOString()
-          });
-      } catch (error) {
-          displayError("Error storing user data."); // Custom message
-      }
-  }
-
-  // Function to display error messages
-  function displayError(message) {
-      const errorElement = document.getElementById("error");
-      errorElement.textContent = message;
-      errorElement.style.display = "block"; // Show the error message
-      setTimeout(() => {
-          errorElement.style.display = "none"; // Hide after 3 seconds
-      }, 3000);
-  }
-
-  // Function to handle email/password signup
-  async function signup(email, password) {
-      try {
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          const user = userCredential.user;
-          await storeUserData(user);
-          window.location.href = 'DelightX-Home.html';
-      } catch (error) {
-          let errorMessage = "Signup error. Please try again."; // Default message
-          if (error.code === "auth/email-already-in-use") {
-              errorMessage = "This email is already in use.";
-          }
-          displayError(errorMessage); // Show custom error message
-      }
-  }
 
   // Function to handle email/password login
   async function login(email, password) {
-      try {
-          const userCredential = await signInWithEmailAndPassword(auth, email, password);
-          const user = userCredential.user;
-          window.location.href = 'DelightX-Home.html';
-      } catch (error) {
-          let errorMessage = "Login error. Please try again."; // Default message
-          if (error.code === "auth/wrong-password") {
-              errorMessage = "Incorrect password.";
-          } else if (error.code === "auth/user-not-found") {
-              errorMessage = "No user found with this email.";
-          }
-          displayError(errorMessage); // Show custom error message
-      }
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href = 'DelightX-Home.html';
+    } catch (error) {
+      console.error("Login error:", error.message); // Log error for debugging
+      alert("Login error. Please try again."); // Basic alert for user feedback
+    }
   }
 
-  // Function to handle Google sign-in or signup
+  // Function to handle Google sign-in
   async function googleSignIn() {
-      const provider = new GoogleAuthProvider();
-      try {
-          const result = await signInWithPopup(auth, provider);
-          const user = result.user;
-          await storeUserData(user);
-          window.location.href = 'DelightX-Home.html';
-      } catch (error) {
-          displayError("Google sign-in error. Please try again."); // Custom error message
-      }
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      window.location.href = 'DelightX-Home.html';
+    } catch (error) {
+      console.error("Google sign-in error:", error.message); // Log error for debugging
+      alert("Google sign-in error. Please try again."); // Basic alert for user feedback
+    }
   }
 
   // Attach events to buttons after the DOM is loaded
   document.addEventListener("DOMContentLoaded", function() {
-      document.getElementById("loginButton").addEventListener("click", function() {
-          const email = document.getElementById("loginEmail").value;
-          const password = document.getElementById("loginPassword").value;
-          login(email, password);
-      });
+    document.getElementById("loginButton").addEventListener("click", function() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      login(email, password);
+    });
 
-      document.getElementById("signupButton").addEventListener("click", function() {
-          const email = document.getElementById("signupEmail").value;
-          const password = document.getElementById("signupPassword").value;
-          signup(email, password);
-      });
-
-      document.getElementById("googleSignInButton").addEventListener("click", googleSignIn);
-      document.getElementById("googleSignUpButton").addEventListener("click", googleSignIn); // Using same function for signup
+    document.getElementById("googleSignInButton").addEventListener("click", googleSignIn);
   });
 </script>
 
