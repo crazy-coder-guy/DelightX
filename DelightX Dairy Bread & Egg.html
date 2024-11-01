@@ -425,7 +425,7 @@ body, html {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
-    import { getDatabase, ref, get, child, set, onValue } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
+    import { getDatabase, ref, get, child, set, remove, onValue } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
 
     const firebaseConfig = {
@@ -438,28 +438,23 @@ body, html {
         appId: "1:554333595542:web:d445cd0bea3f1483c21fb7"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     const auth = getAuth(app);
 
-    let currentUserUid = null; // Declare currentUserUid globally
-    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || {}; // Load cart items from localStorage
+    let currentUserUid = null;
 
-    // Show the skeleton loader on initial load
     function showSkeletonLoader() {
         const productDisplay = document.getElementById('productDisplay');
         productDisplay.classList.add('loading');
     }
 
-    // Function to hide the skeleton loader
     function hideSkeletonLoader() {
         const productDisplay = document.getElementById('productDisplay');
         productDisplay.classList.remove('loading');
     }
 
-    // Function to fetch products by category
-    window.fetchProductsByCategory = async function(category) { // Bind function to window
+    window.fetchProductsByCategory = async function(category) {
         if (!navigator.onLine) {
             console.error("Client is offline");
             return;
@@ -491,11 +486,11 @@ body, html {
         const filteredProducts = [];
 
         for (const key in products) {
-            const productLat = parseFloat(products[key].latitude); // Ensure latitude is a number
-            const productLon = parseFloat(products[key].longitude); // Ensure longitude is a number
+            const productLat = parseFloat(products[key].latitude);
+            const productLon = parseFloat(products[key].longitude);
             const distance = calculateDistance(lat, lon, productLat, productLon);
             
-            if (distance <= 1 && products[key].category === category) { // Only show products within 1 km and matching category
+            if (distance <= 1 && products[key].category === category) {
                 const product = {
                     id: key,
                     availability: products[key].availability,
@@ -520,28 +515,27 @@ body, html {
         hideSkeletonLoader();
     }
 
-    // Function to calculate distance between two points (in km)
     function calculateDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371; // Radius of the Earth in km
+        const R = 6371;
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLon = (lon2 - lon1) * Math.PI / 180;
         const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                   Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                   Math.sin(dLon / 2) * Math.sin(dLon / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c; // Distance in km
+        return R * c;
     }
 
     async function displayProducts(products) {
         const productDisplay = document.getElementById('productDisplay');
-        productDisplay.innerHTML = ''; // Clear previous products
+        productDisplay.innerHTML = '';
 
         const imageLoadPromises = [];
 
         for (const product of products) {
             const productCard = document.createElement('div');
             productCard.className = 'card product-card';
-            productCard.style.width = '250px'; // Fixed width for cards
+            productCard.style.width = '250px';
 
             const productImage = document.createElement('img');
             productImage.src = product.imageURL;
@@ -584,7 +578,6 @@ body, html {
             priceContainer.appendChild(finalPriceElement);
             productBody.appendChild(priceContainer);
 
-            // Quantity buttons
             const qtyContainer = document.createElement('div');
             qtyContainer.className = 'd-flex align-items-center qty-container mt-1';
 
@@ -631,13 +624,11 @@ body, html {
             qtyContainer.appendChild(plusButton);
             productBody.appendChild(qtyContainer);
 
-            // Add to Cart button
             const addToCartButton = document.createElement('button');
             addToCartButton.className = 'btn-add-to-cart mt-2';
             addToCartButton.style.display = 'flex';
             addToCartButton.style.alignItems = 'center';
             addToCartButton.style.justifyContent = 'center';
-            addToCartButton.setAttribute('data-product-id', product.id); // Set data attribute
 
             const cartIcon = document.createElement('i');
             cartIcon.className = 'fa-solid fa-basket-shopping fa-fade me-2';
@@ -646,21 +637,29 @@ body, html {
             const buttonText = document.createTextNode('Add to Cart');
             addToCartButton.appendChild(buttonText);
 
-            // Check if the product is already in the cart
+            const cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
             if (cartItems[product.id]) {
-                addToCartButton.innerHTML = '<i class="fa-solid fa-basket-shopping fa-bounce me-2"></i> Already in Cart';
-                addToCartButton.disabled = true;
-                addToCartButton.style.backgroundColor = 'black'; // Change button color to black
+                addToCartButton.style.backgroundColor = 'black';
+                buttonText.textContent = 'Remove Item';
             }
 
-            // Ensure product.id is set for adding to cart
-            product.id = product.id || `product_${Math.random().toString(36).substr(2, 9)}`; // Generate a random ID if not present
+            product.id = product.id || `product_${Math.random().toString(36).substr(2, 9)}`;
 
-            // Set up the onclick event
-            addToCartButton.onclick = () => {
+            addToCartButton.onclick = async () => {
                 const quantity = parseInt(qtyDisplay.textContent);
                 if (currentUserUid) {
-                    addToCart(product, quantity); // Call the addToCart function
+                    if (cartItems[product.id]) {
+                        await removeFromCart(product);
+                        addToCartButton.style.backgroundColor = '';
+                        buttonText.textContent = 'Add to Cart';
+                        delete cartItems[product.id]; // Remove from local storage
+                    } else {
+                        await addToCart(product, quantity);
+                        cartItems[product.id] = { ...product, quantity };
+                        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                        addToCartButton.style.backgroundColor = 'black';
+                        buttonText.textContent = 'Remove Item';
+                    }
                 } else {
                     console.error('User is not logged in. Cannot add to cart.');
                 }
@@ -670,7 +669,6 @@ body, html {
             productCard.appendChild(productBody);
             productDisplay.appendChild(productCard);
 
-            // Load images
             const imgElement = productCard.querySelector('.card-img-top');
             const imageLoadPromise = new Promise((resolve) => {
                 imgElement.onload = () => {
@@ -686,7 +684,6 @@ body, html {
             imageLoadPromises.push(imageLoadPromise);
         }
 
-        // Wait for all images to load
         await Promise.all(imageLoadPromises);
         hideSkeletonLoader();
     }
@@ -699,25 +696,23 @@ body, html {
             const userLocationSnapshot = await get(ref(database, `users/${currentUserUid}/location`));
             if (userLocationSnapshot.exists()) {
                 const userLocation = userLocationSnapshot.val();
-                localStorage.setItem('userLocation', JSON.stringify(userLocation)); // Save user location
+                localStorage.setItem('userLocation', JSON.stringify(userLocation));
                 fetchProductsByCategory('Pasta and Noodles');
             } else {
-                promptForLocation(); // Prompt user for location if not found
+                promptForLocation(); 
             }
         } else {
             console.log("User is not logged in. Redirecting to index.html.");
-            window.location.href = "index.html"; // Redirect if not logged in
+            window.location.href = "index.html"; 
         }
     });
 
-    // Function to add item to cart
     async function addToCart(product, quantity) {
         if (!currentUserUid) {
             console.error('User is not logged in. Cannot add to cart.');
             return;
         }
 
-        // Ensure product.id is available
         if (!product.id) {
             console.error('Product ID is undefined. Cannot add to cart.');
             return;
@@ -738,24 +733,26 @@ body, html {
 
         try {
             await set(cartRef, cartItem);
-            console.log('Product added to cart:', cartItem);
-
-            // Update the cartItems in localStorage
-            cartItems[product.id] = cartItem;
-            localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Store in local storage
-
-            // Update the add to cart button instead of re-rendering the entire products list
-            const addToCartButton = document.querySelector(`[data-product-id="${product.id}"]`);
-            addToCartButton.className = 'btn add w-100';
-            addToCartButton.innerHTML = '<i class="fa-solid fa-basket-shopping fa-bounce me-2 "></i>in Cart';
-            addToCartButton.disabled = true;
-            addToCartButton.style.backgroundColor = '#000000'; // Change button color to black
-
+            console.log(`Added ${quantity} of ${product.productName} to cart with ID ${product.id}.`);
         } catch (error) {
             console.error('Error adding item to cart:', error);
         }
     }
 
+    async function removeFromCart(product) {
+        if (!currentUserUid) {
+            console.error('User is not logged in. Cannot remove from cart.');
+            return;
+        }
+
+        const cartRef = ref(database, `carts/${currentUserUid}/${product.id}`);
+        try {
+            await remove(cartRef);
+            console.log(`Removed ${product.productName} from cart with ID ${product.id}.`);
+        } catch (error) {
+            console.error('Error removing item from cart:', error);
+        }
+    }
 </script>
 
 </body>
