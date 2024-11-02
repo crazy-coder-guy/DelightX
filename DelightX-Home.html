@@ -17,7 +17,30 @@
                 display: none; /* Hide bottom nav on larger screens */
             }
         }
-      
+        .popup .button {
+    transition: transform 0.1s ease;
+}
+
+.popup .button:active {
+    transform: scale(0.95);
+}
+
+.button.clicked {
+    animation: button-click 0.1s ease forwards;
+}
+
+@keyframes button-click {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
    /* Popup Styles */
 .popup {
     position: fixed;
@@ -156,6 +179,7 @@
         </a>
     </div>
 </nav>
+
 <div id="locationPopup" class="popup">
     <div class="popup-content">
         <p>Please enable location access for personalized services.</p>
