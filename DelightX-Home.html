@@ -184,8 +184,8 @@
     <div class="popup-content">
         <p>Please enable location access for personalized services.</p>
         <div class="button-container">
-            <button id="allowLocation" class="button accept">Ok</button>
-            <button id="denyLocation" class="button">Deny</button>
+            <button id="allowLocation" class="button accept">Allow <i class="fa-solid fa-check fa-beat"></i></button>
+          
         </div>
     </div>
 </div>
@@ -364,12 +364,6 @@
                 // If location is not allowed, keep prompting
                 promptForLocation();
             }
-        };
-
-        document.getElementById('denyLocation').onclick = () => {
-            locationPopup.classList.remove('show'); // Close popup
-            // Keep prompting the user
-            promptForLocation();
         };
     }
 
