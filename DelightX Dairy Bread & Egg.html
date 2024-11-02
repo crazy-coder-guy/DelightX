@@ -80,7 +80,7 @@ body, html {
 
 .card img {
     width: 100%; /* Fit image within the card */
-    height: 130px; /* Increased height for images */
+    height: 90px; /* Increased height for images */
     object-fit: cover; /* Cover image without distortion */
     border-radius: 10px 10px 0 0; /* Match card style */
 }
@@ -90,7 +90,6 @@ body, html {
     padding: 5px; /* Removed padding */
     
 }
-
 
 .skeleton-loader {
     display: flex;
@@ -104,11 +103,33 @@ body, html {
     height: 200px; /* Increased height for skeleton cards */
     margin: 5px; /* Ensure consistent spacing */
     border-radius: 10px; /* Match product card radius */
-    background: linear-gradient(90deg, #e0e0e0 25%, #c0c0c0 50%, #e0e0e0 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    background: rgba(213, 245, 220, 0.6); /* Creamy green with transparency */
+    backdrop-filter: blur(10px); /* Blur effect for glassmorphism */
+    position: relative; /* To position the pseudo-element */
+    overflow: hidden; /* To contain the shimmer effect */
 }
 
+.skeleton-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; /* Start from above the card */
+    left: -50%; /* Start from the left */
+    width: 200%; /* Cover the entire card */
+    height: 200%; /* Cover the entire card */
+    background: linear-gradient(90deg, rgba(213, 245, 220, 0.4) 25%, rgba(255, 255, 255, 0.5) 50%, rgba(213, 245, 220, 0.4) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite; /* Adjust speed here */
+    opacity: 0.5; /* Slightly transparent for effect */
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0; /* Start from left */
+    }
+    100% {
+        background-position: 200% 0; /* Move to right */
+    }
+}
 
 
 /* Reduced font sizes for product card text */
@@ -413,6 +434,9 @@ body, html {
         <div id="productDisplay" class="product-container">
             <div class="skeleton-loader">
                 <!-- Skeleton loader content here -->
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
                 <div class="skeleton-card"></div>
                 <div class="skeleton-card"></div>
                 <div class="skeleton-card"></div>
