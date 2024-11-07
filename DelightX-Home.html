@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DelightX</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Righteous&display=swap" rel="stylesheet">
+    <style>
+
+        
+body, html {
+    height: 100%;
+    font-family:  "Montserrat", sans-serif;
+    
+}
+.navbar-brand {
+font-family: "Righteous", sans-serif !important;
+}
+        @media (min-width: 992px) {
+            .bottom-nav {
+                display: none; /* Hide bottom nav on larger screens */
+            }
+        }
+        .popup .button {
+    transition: transform 0.1s ease;
+}
+
+.popup .button:active {
+    transform: scale(0.95);
+}
+
+.button.clicked {
+    animation: button-click 0.1s ease forwards;
+}
+
+@keyframes button-click {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+   /* Popup Styles */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 2px;
+    text-align: center;
+    display: none; /* Initially hidden */
+}
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 999; /* Ensure it covers everything */
+    display: none; /* Hidden by default */
+}
+
+
+.popup.show {
+    display: block; /* Show the popup */
+}
+
+.backdrop.show {
+    display: block; /* Show the backdrop */
+}
+/* Popup Content Styles */
+.popup-content {
+    padding: 20px;
+}
+
+/* Button Styles */
+.button {
+    background: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.5); /* Creamy green shadow */
+}
+
+.button:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Accept Button Style */
+.accept {
+    background: #28a745; /* Green */
+    color: #fff;
+}
+
+.accept:hover {
+    background: #218838; /* Darker green */
+}
+
+/* Show Popup */
+.show {
+    display: block;
+}
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-light d-lg-none">
+        <div class="container-fluid justify-content-between">
+            <a class="navbar-brand" href="#">DelightX</a>
+            <a href="Delight-Search.html" class="btn btn-outline-secondary" aria-label="Search">
+                <i class="fa-solid fa-magnifying-glass fa-fade"></i>
+            </a>
+        </div>
+    </nav>
+    
+<!-- Desktop Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light d-none d-lg-block">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">DelightX</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        More
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="moreDropdown">
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Help</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success me-2" type="submit">Search</button>
+                <button class="btn btn-outline-secondary" type="button" aria-label="Cart">
+                    <i class="fa-solid fa-cart-shopping fa-bounce"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- Bottom Navigation for Mobile -->
+<nav class="navbar navbar-light bg-light fixed-bottom d-lg-none bottom-nav">
+    <div class="container-fluid justify-content-around">
+        <a class="nav-link text-center" href="#">
+            <i class="fas fa-home fa-lg"></i>
+            <div>Home</div>
+        </a>
+        <a class="nav-link text-center" href="DelightX-Profile.html">
+            <i class="fas fa-user fa-lg"></i>
+            <div>Profile</div>
+        </a>
+        <a class="nav-link text-center" href="#">
+            <i class="fas fa-ellipsis-h fa-lg"></i>
+            <div>More</div>
+        </a>
+        <a class="nav-link text-center" href="DelightX-Cart.html">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+            <div>Cart</div>
+        </a>
+    </div>
+</nav>
+
+<div id="locationBackdrop" class="backdrop"></div>
+<div id="locationPopup" class="popup">
+    <div class="popup-content">
+        <p>Please enable location access to see nearby products and offers tailored for you.</p>
+        <div class="button-container">
+        <button id="allowLocation" class="button accept">Allow <i class="fa-solid fa-location-dot"></i></button> 
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container mt-4">
+    <h5 class="mb-3">Grocery & Kitchen</h5>
+    <div class="row row-cols-2 row-cols-md-3 g-2 g-lg-3">
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="DelightX-Packaged-Food.html"> <!-- Link to product page -->
+                <img src="src/Home Screen/Packaged Food.png" alt="pasta & Noodles" class="img-fluid" style="object-fit: contain;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="DelightX-Atta-Rice-Oil-Dals.html"> <!-- Link to product page -->
+                <img src="src/Home Screen/Atta.png" alt="Atta-Rice-Oil-Dals" class="img-fluid" style="object-fit: contain;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="DelightX-Masala-Dry-Fruits.html"> <!-- Link to product page -->
+                <img src="src/Home Screen/Masala & Dry Fruits.png" alt="Masala-Dry-Fruits" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="DelightX Grocery & Kitchen.html"> <!-- Link to product page -->
+                <img src="src/Home Screen/Breakfast &  Sauces.png" alt="Canned Foods" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="DelightX-Laundry-Essentials.html"> <!-- Link to product page -->
+                <img src="src/Home Screen/Laundry Essentials.png" alt="Laundry" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="DelightX-Kitchenware.html"> <!-- Link to product page -->
+                <img src="src/Home Screen/Kitchen Essentials.png" alt="Beverages" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-0 d-md-none">
+            <a href="DelightX-Tea-Coffee.html"> <!-- Link to product page -->
+                <img src="https://cdn.zeptonow.com/production///tr:w-420,ar-486-333,pr-true,f-auto,q-80/cms/category/e35f8d62-e623-4b52-9aef-cb45cc26c318.png" alt="New Mobile Image" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+    </div>
+</div>
+<!--
+<div class="container mt-4">
+    <h5 class="mb-3">Snacks and Drinks</h5>
+    <div class="row row-cols-2 row-cols-md-3 g-2 g-lg-3">
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-226-334,pr-true,f-auto,q-80/cms/category/31a3c3bd-1c0e-48ad-9441-0ba1c2552e3d.png" alt="Fresh Produce" class="img-fluid" style="object-fit: contain;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-226-334,pr-true,f-auto,q-80/cms/category/366e5b7d-2028-4935-b9f1-75bfa085c3d7.png" alt="Dairy Products" class="img-fluid" style="object-fit: contain;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/90b2faee-1461-465a-a8c6-8c84716dd7dc.png" alt="Baked Goods" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-300-444,pr-true,f-auto,q-80/cms/category/7b766042-0194-4f58-bb02-42748e327a8c.png" alt="Canned Foods" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/59d2c0cc-e776-407c-9142-7e69898d9eab.png" alt="Beverages" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-226-334,pr-true,f-auto,q-80/cms/category/9b88fff5-73f5-46fd-999f-1622db4203d7.png" alt="Beverages" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-0 d-md-none">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-420,ar-486-333,pr-true,f-auto,q-80/cms/category/e35f8d62-e623-4b52-9aef-cb45cc26c318.png" alt="New Mobile Image" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+    </div>
+</div>
+-->
+<div class="container mt-4 mb-5">
+    <h5 class="mb-3">Personal & Beauty Care</h5>
+    <div class="row row-cols-2 row-cols-md-3 g-2 g-lg-3">
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/b1909dfd-726c-412b-beb7-9553bc909363.png" alt="Fresh Produce" class="img-fluid" style="object-fit: contain;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/227b70d5-d1cf-428b-a276-1392c5067eb3.png" alt="Dairy Products" class="img-fluid" style="object-fit: contain;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-226-334,pr-true,f-auto,q-80/cms/category/e4fe52ef-96d9-4289-afb1-1c1ca7efd85b.png" alt="Baked Goods" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/470527ff-829a-499f-9d79-32efb98a6e4d.png" alt="Canned Foods" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/3d1df12d-cf35-4db4-aaf4-496db4fa59ab.png" alt="Beverages" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-3">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-210,ar-225-333,pr-true,f-auto,q-80/cms/category/57079f1d-e559-46bf-a2f0-563f846ce0cd.png" alt="Beverages" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+        <div class="col-lg-2 col-md-2 col-0 d-md-none">
+            <a href="#">
+                <img src="https://cdn.zeptonow.com/production///tr:w-420,ar-486-333,pr-true,f-auto,q-80/cms/category/55a9c3a6-4960-4744-b472-0929b06e0a4a.png" alt="New Mobile Image" class="img-fluid" style="object-fit: cover;">
+            </a>
+        </div>
+    </div>
+</div> 
+
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+    
+    const firebaseConfig = {
+        apiKey: "AIzaSyC7IZ7BhQPOy7CfEQLuJTOxdrTybBZTFO8",
+        authDomain: "delightx-in.firebaseapp.com",
+        databaseURL: "https://delightx-in-default-rtdb.firebaseio.com",
+        projectId: "delightx-in",
+        storageBucket: "delightx-in.appspot.com",
+        messagingSenderId: "554333595542",
+        appId: "1:554333595542:web:d445cd0bea3f1483c21fb7"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+    
+    let currentUserUid;
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUserUid = user.uid;
+            console.log("User is logged in:", currentUserUid);
+            
+            // Check local storage for existing location
+            const storedLocation = JSON.parse(localStorage.getItem('userLocation'));
+
+            if (storedLocation && Date.now() <= storedLocation.expiresAt) {
+                // Location exists and is valid; store it in Firebase
+                await storeUserLocation(currentUserUid, storedLocation);
+            } else {
+                const userLocationSnapshot = await get(ref(database, `users/${currentUserUid}/location`));
+                if (!userLocationSnapshot.exists()) {
+                    promptForLocation(); // Prompt user for location if not found
+                } else {
+                    checkLocationExpiry(); // Check if location is expired
+                }
+            }
+        } else {
+            console.log("User is not logged in. Redirecting to index.html.");
+            window.location.href = "index.html"; // Redirect if not logged in
+        }
+    });
+
+    async function promptForLocation() {
+    // Check if user location exists in localStorage or sessionStorage
+    const storedLocation = JSON.parse(localStorage.getItem('userLocation')) || JSON.parse(sessionStorage.getItem('userLocation'));
+    
+    // If there's no stored location or if it's expired, prompt for location
+    if (!storedLocation || Date.now() > storedLocation.expiresAt) {
+        const locationPopup = document.getElementById('locationPopup');
+        const locationBackdrop = document.getElementById('locationBackdrop');
+        
+        locationPopup.classList.add('show');
+        locationBackdrop.classList.add('show'); // Show the backdrop
+
+        const allowButton = document.getElementById('allowLocation');
+        if (allowButton) {
+            allowButton.onclick = async () => {
+                const location = await getUserLocation();
+                if (location) {
+                    await storeUserLocation(currentUserUid, location);
+                    locationPopup.classList.remove('show'); // Close popup
+                    locationBackdrop.classList.remove('show'); // Hide backdrop
+                } else {
+                    // If location is not available, retry
+                    promptForLocation();
+                }
+            };
+        }
+    } else {
+        console.log("Location is already available:", storedLocation);
+    }
+}
+
+function getUserLocation() {
+    return new Promise((resolve, reject) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    resolve({ latitude, longitude });
+                },
+                (error) => {
+                    console.error("Error getting location:", error);
+                    reject(null); // Return null if unable to retrieve location
+                }
+            );
+        } else {
+            reject(null); // Return null if geolocation is not supported
+        }
+    });
+}
+
+async function storeUserLocation(userId, location) {
+    const expirationTime = Date.now() + 3600000; // 1 hour in milliseconds
+
+    try {
+        // Store the location in Firebase
+        await set(ref(database, `users/${userId}/location`), {
+            latitude: location.latitude,
+            longitude: location.longitude,
+            expiresAt: expirationTime
+        });
+
+        // Store the location in localStorage and sessionStorage for quick access
+        const locationData = { ...location, expiresAt: expirationTime };
+        localStorage.setItem('userLocation', JSON.stringify(locationData));
+        sessionStorage.setItem('userLocation', JSON.stringify(locationData));
+        
+        console.log("User location stored in Firebase and local storage:", location);
+        
+        // Set a timeout to remove the location after 1 hour
+        setTimeout(() => removeUserLocation(userId), 3600000);
+    } catch (error) {
+        console.error("Error storing location in Firebase:", error);
+    }
+}
+
+// Function to remove user location from storage after expiration
+async function removeUserLocation(userId) {
+    try {
+        await remove(ref(database, `users/${userId}/location`));
+        localStorage.removeItem('userLocation');
+        sessionStorage.removeItem('userLocation');
+        console.log("User location removed after expiration.");
+    } catch (error) {
+        console.error("Error removing location:", error);
+    }
+}
+
+
+
+
+    function checkLocationExpiry() {
+        const storedLocation = JSON.parse(localStorage.getItem('userLocation'));
+        if (storedLocation && Date.now() > storedLocation.expiresAt) {
+            removeUserLocation(currentUserUid);
+        }
+    }
+
+    document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', async (event) => {
+            if (!currentUserUid) {
+                window.location.href = "index.html"; // Redirect if not logged in
+                return;
+            }
+
+            const userLocationSnapshot = await get(ref(database, `users/${currentUserUid}/location`));
+            if (!userLocationSnapshot.exists()) {
+                event.preventDefault(); // Prevent link action
+                promptForLocation(); // Show location prompt
+            }
+        });
+    });
+</script>
+
+
+    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

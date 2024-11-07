@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DelightX</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Righteous&display=swap" rel="stylesheet">
+    <style>
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+body, html {
+    height: 100%;
+    font-family:  "Montserrat", sans-serif;
+    
+}
+.navbar-brand {
+font-family: "Righteous", sans-serif !important;
+}
+.container {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+}
+
+.column {
+    height: 100%; /* Full height */
+}
+
+.black {
+    position: fixed; /* Fixed positioning */
+    width: 10%; /* Default width for desktop */
+    background-color: rgb(246, 255, 242);
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 15px; /* Add padding to the column */
+    margin-left: -5%; /* Move the black column slightly to the left */
+}
+
+.green {
+    margin-left: 10%; /* Leave space for the black column */
+    height: 100%; /* Ensure full height */
+    width: 85%; /* Adjusted width for product display */
+    background-color: rgb(255, 255, 255);
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal overflow */
+}
+
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Space between cards */
+    margin-bottom: 50px;
+}
+
+.card, .skeleton-card {
+    box-shadow: 0 2px 5px rgb(255, 255, 255); /* Add some shadow for aesthetics */
+    margin: 5px; /* Reduced margin */
+    padding: 5px; /* Reduced padding */
+    border: 1px solid #ddd; /* Optional border */
+    border-radius: 5px; /* Rounded corners */
+    flex: 1 1 calc(16.66% - 10px); /* 6 cards per row on desktop (100% / 6 = 16.66%) */
+}
+
+/* Adjusting media query for mobile view */
+@media (max-width: 768px) {
+    .card, .skeleton-card {
+        flex: 1 1 calc(50% - 10px); /* Increase card width to fit more on mobile */
+    }
+}
+
+.category {
+    box-shadow: 0 2px 5px rgb(255, 255, 255); /* Add some shadow for aesthetics */
+    margin: 5px; /* Reduced margin */
+    padding: 1px; /* Reduced padding */
+    border: 10px solid #ddd; /* Optional border */
+    border-radius: 5px; /* Rounded corners */
+    flex: 1 1 calc(16.66% - 10px); /* 6 cards per row on desktop (100% / 6 = 16.66%) */
+}
+
+.product-card {
+    background-color: white;
+    width: 100%;
+    border-radius: 10px;
+    padding: 0; /* Removed padding */
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgb(255, 255, 255);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 350px; /* Adjusted width for cards */
+}
+
+.card img {
+    width: 100%; /* Fit image within the card */
+    height: 110px; /* Increased height for images */
+    object-fit: contain; /* Cover image without distortion */
+    border-radius: 10px 10px 0 0; /* Match card style */
+}
+.card-body {
+    line-height: 1;
+    font-size: 0.875rem;
+    padding: 5px; /* Removed padding */
+    
+}
+.skeleton-loader {
+    display: flex;
+    flex-wrap: wrap; /* Allow skeleton cards to wrap */
+    justify-content: space-between; /* Space between skeleton cards */
+    width: 100%;
+}
+
+.skeleton-card {
+    flex: 1 1 calc(23% - 10px); /* 4 cards per row on desktop */
+    height: 200px; /* Increased height for skeleton cards */
+    margin: 5px; /* Ensure consistent spacing */
+    border-radius: 10px; /* Match product card radius */
+    background: #D6EFD8;
+    backdrop-filter: blur(10px); /* Blur effect for glassmorphism */
+    position: relative; /* To position the pseudo-element */
+    overflow: hidden; /* To contain the shimmer effect */
+}
+
+.skeleton-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; /* Start from above the card */
+    left: -50%; /* Start from the left */
+    width: 200%; /* Cover the entire card */
+    height: 200%; /* Cover the entire card */
+    background: linear-gradient(90deg, rgba(240, 240, 240, 0.4) 25%, rgba(255, 255, 255, 0.6) 50%, rgba(240, 240, 240, 0.4) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite; /* Adjust speed here */
+    opacity: 0.6; /* Slightly transparent for effect */
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0; /* Start from left */
+    }
+    100% {
+        background-position: 200% 0; /* Move to right */
+    }
+}
+
+/* Reduced font sizes for product card text */
+.product-card .card-title,
+.product-card .qty-info,
+.product-card .original-price,
+.product-card .final-price {
+    font-size: 0.8rem; /* Adjust font size */
+}
+
+.product-card .brand-name {
+    font-weight: bold; /* Bold the brand name */
+    color: black; /* Pure black color */
+    font-size: 1rem
+}
+
+.card-title {
+    font-weight: 600; /* Increased font weight */
+    color: rgba(0, 0, 0, 0.8); /* Light black color */
+    font-size: 1.2rem
+}
+
+.qty-container {
+    justify-content: center; /* Center the buttons */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center vertically */
+}
+
+@media (max-width: 768px) {
+    .black {
+        width: 25%; /* Full width for mobile */
+        padding: 0; /* Remove padding */
+        margin-left: -5%; /* Adjust left margin for mobile */
+    }
+    .green {
+        width: 100%; /* Adjust width for mobile */
+        margin-left: 20%; /* Align to the left according to black column width */
+    }
+    .card, .skeleton-card {
+        flex: 1 1 calc(50% - 10px); /* Increase card width to fit more on mobile */
+    }
+}
+
+@media (min-width: 992px) {
+    .bottom-nav {
+        display: none; /* Hide bottom nav on larger screens */
+    }
+}
+.card-img-top {
+    width: 100%; /* Ensures the image fills the container */
+    height: 200px; /* Set a fixed height as needed */
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+    border-top-left-radius: 10px; /* Consistent border radius */
+    border-top-right-radius: 10px; /* Consistent border radius */
+}
+
+
+.category-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 10px 0;
+}
+
+.card-body {
+    line-height: 1; /* Keep existing line height */
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.card-body h5 {
+    text-align: left; /* Align product title to left */
+    text-transform: uppercase; /* Make title uppercase */
+    font-size: 0.8rem;
+}
+
+.qty-container {
+    margin-top: 0;
+    margin: 0;
+}
+
+.btn-primary {
+    background-color: #347928;
+    border: none;
+    border-radius: 25px;
+    transition: background-color 0.3s, transform 0.3s; /* Added transform for hover effect */
+    padding: 10px ;
+    margin-top: 10px;
+}
+
+.btn.add {
+    background-color: #347928;
+    color: #ffffff; /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Optional: rounded corners */
+    padding: 10px; /* Optional: padding for better spacing */
+    font-size: 16px; /* Optional: font size */
+}
+
+.overflow-auto {
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.price-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    gap: 10px; /* Space between elements */
+    margin-bottom: 0; /* Ensure no extra margin at the bottom */
+}
+
+.discount-amount {
+    color: green; /* Green color for discount */
+    font-size: 0.875rem; /* Adjust font size */
+    line-height: 1; /* Ensure consistent line height */
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: rgb(80, 80, 80);
+    font-size: 0.875rem; /* Adjust font size */
+    line-height: 1; /* Ensure consistent line height */
+}
+
+.final-price {
+    color: green; /* Green color for final price */
+    font-weight: bold;
+    font-size: 0.875rem; /* Adjust font size */
+    line-height: 1; /* Ensure consistent line height */
+}
+
+.card-title {
+    font-size: 0.8em; /* Default font size */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+}
+
+.qty-info {
+    margin-bottom: 10px;
+}
+
+.qty-container {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    margin: 0; /* Removed margin */
+    width: 100%;
+}
+
+.qty-display-container {
+    margin: 0 0px; /* Add margin for spacing */
+    text-align: center; /* Center the text within the span */
+    background-color: rgb(255, 255, 255); /* White background for the quantity display */
+    padding: 1px; /* Add some padding for better spacing */
+    border-radius: 4px; /* Optional: rounded corners */
+}
+
+.btn {
+    margin: 0px; /* No margin between buttons */
+    background-color: green; /* Green background for buttons */
+    color: white; /* White text for buttons */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Optional: rounded corners */
+}
+
+.btn:hover {
+    background-color: darkgreen; /* Darker green on hover */
+}
+
+.btn-add-to-cart {
+    background-color: green; /* Green background */
+    width: 100%;
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Slightly rounded corners */
+    padding: 10px 10px; /* Padding for better size */
+    font-size: 12px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color transition */
+    justify-items: center; /* Center button contents */
+    margin: 0 auto; /* Center the button horizontally */
+    display: flex; /* Flexbox for centering */
+    align-items: center; /* Center vertically */
+}
+.top-category {
+    margin-left: 15px; /* or use padding-left */
+    font-family:  "Montserrat", sans-serif;
+    font-size:0.9rem;
+}
+
+.btn-add-to-cart:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Quantity button styles */
+.qty-button {
+    width: 40px; /* Fixed width for minus button */
+}
+
+.qty-button.add {
+    width: 50px; /* Slightly larger width for add button */
+}
+    </style>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-light bg-light d-lg-none sticky-top">
+        <div class="container-fluid justify-content-between">
+            <a class="navbar-brand" href="#">DelightX</a>
+            <a href="Delight-Search.html" class="btn btn-outline-secondary" aria-label="Search">
+                <i class="fa-solid fa-magnifying-glass fa-fade"></i>
+            </a>
+        </div>
+    </nav>
+<!-- Desktop Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light d-none d-lg-block sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">DelightX</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="moreDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        More
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="moreDropdown">
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="#">Help</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success me-2" type="submit">Search</button>
+                <button class="btn btn-outline-secondary" type="button" aria-label="Cart">
+                    <i class="fa-solid fa-cart-shopping fa-bounce"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- Bottom Navigation for Mobile -->
+<nav class="navbar navbar-light bg-light fixed-bottom d-lg-none bottom-nav">
+    <div class="container-fluid justify-content-around">
+        <a class="nav-link text-center" href="DelightX-Home.html">
+            <i class="fas fa-home fa-lg"></i>
+            <div>Home</div>
+        </a>
+        <a class="nav-link text-center" href="DelightX-Profile.html">
+            <i class="fas fa-user fa-lg"></i>
+            <div>Profile</div>
+        </a>
+        <a class="nav-link text-center" href="#">
+            <i class="fas fa-ellipsis-h fa-lg"></i>
+            <div>More</div>
+        </a>
+        <a class="nav-link text-center" href="DelightX-Cart.html">
+            <i class="fas fa-shopping-cart fa-lg"></i>
+            <div>Cart</div>
+        </a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="column black">
+        <h5 class="top-category">Categories</h5>
+        <div class="card" onclick="fetchProductsByCategory('Spices and Seasonings')">
+            <img src="src/Home Screen/Powders and Others.png" alt="Spices and Seasonings">
+        </div>
+        <div class="card" onclick="fetchProductsByCategory('')">
+            <img src="src/Home Screen/Salt & Sugars.png" alt="Salt & Sugars">
+        </div>
+        <div class="card" onclick="fetchProductsByCategory('')">
+            <img src="src/Home Screen/Dry Fruits & Nuts.png" alt="">
+        </div>
+    </div>
+    
+    <div class="column green">
+        <div id="carouselExampleIndicators " class="carousel slide mt-1 " data-bs-ride="carousel">
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="https://cdn.zeptonow.com/production///tr:w-640,ar-970-560,pr-true,f-auto,q-80/inventory/banner/bd6d5804-7dac-4278-9cc5-2bdd509f4fec.png" class="d-block w-100" alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="https://cdn.zeptonow.com/production///tr:w-640,ar-969-559,pr-true,f-auto,q-80/inventory/banner/fdee09b3-17de-4af0-b340-1d7c33a3aa93.png" class="d-block w-100" alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="https://cdn.zeptonow.com/production///tr:w-640,ar-969-558,pr-true,f-auto,q-80/inventory/banner/c93ff78f-a583-497e-931e-ad3b4f7cd9e5.png" class="d-block w-100" alt="...">
+              </div>
+            </div>
+          </div>
+        <div id="productDisplay" class="product-container">
+            <div class="skeleton-loader">
+                <!-- Skeleton loader content here -->
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+    import { getDatabase, ref, get, child, set, remove } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyC7IZ7BhQPOy7CfEQLuJTOxdrTybBZTFO8",
+        authDomain: "delightx-in.firebaseapp.com",
+        databaseURL: "https://delightx-in-default-rtdb.firebaseio.com",
+        projectId: "delightx-in",
+        storageBucket: "delightx-in.appspot.com",
+        messagingSenderId: "554333595542",
+        appId: "1:554333595542:web:d445cd0bea3f1483c21fb7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth(app);
+
+    let currentUserUid = null;
+
+    function showSkeletonLoader() {
+        const productDisplay = document.getElementById('productDisplay');
+        productDisplay.classList.add('loading');
+    }
+
+    function hideSkeletonLoader() {
+        const productDisplay = document.getElementById('productDisplay');
+        productDisplay.classList.remove('loading');
+    }
+
+    window.fetchProductsByCategory = async function(category) {
+        if (!navigator.onLine) {
+            console.error("Client is offline");
+            return;
+        }
+
+        const dbRef = ref(database);
+        get(child(dbRef, `products`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const products = snapshot.val();
+                localStorage.setItem('products', JSON.stringify(products));
+                const userLocation = JSON.parse(localStorage.getItem('userLocation'));
+                if (userLocation) {
+                    const { latitude, longitude } = userLocation;
+                    fetchProductsForLocation(latitude, longitude, products, category);
+                } else {
+                    console.error("User location not found");
+                }
+            } else {
+                console.error("No products found");
+            }
+        }).catch((error) => {
+            hideSkeletonLoader();
+            console.error("Error fetching products: ", error);
+        });
+    };
+
+    async function fetchProductsForLocation(lat, lon, products, category) {
+        showSkeletonLoader();
+        const filteredProducts = [];
+
+        for (const key in products) {
+            const productLat = parseFloat(products[key].latitude);
+            const productLon = parseFloat(products[key].longitude);
+            const distance = calculateDistance(lat, lon, productLat, productLon);
+            
+            if (distance <= 10 && products[key].category === category) {
+                const product = {
+                    id: key,
+                    availability: products[key].availability,
+                    category: products[key].category,
+                    city: products[key].city,
+                    finalPrice: products[key].finalPrice,
+                    imageURL: products[key].imageURL,
+                    listingPrice: products[key].listingPrice,
+                    originalPrice: products[key].originalPrice,
+                    productName: products[key].productName,
+                    productType: products[key].productType,
+                    qtyUnit: products[key].qtyUnit,
+                    quantity: products[key].quantity,
+                    stockAvailable: products[key].stockAvailable,
+                    timestamp: products[key].timestamp,
+                };
+                filteredProducts.push(product);
+            }
+        }
+
+        await displayProducts(filteredProducts);
+        hideSkeletonLoader();
+    }
+
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    async function displayProducts(products) {
+        const productDisplay = document.getElementById('productDisplay');
+        productDisplay.innerHTML = '';
+
+        const imageLoadPromises = [];
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
+
+        for (const product of products) {
+            const productCard = document.createElement('div');
+            productCard.className = 'card product-card';
+            productCard.style.width = '250px';
+
+            const productImage = document.createElement('img');
+            productImage.src = product.imageURL;
+            productImage.className = 'card-img-top';
+            productCard.appendChild(productImage);
+
+            const productBody = document.createElement('div');
+            productBody.className = 'card-body text-left';
+
+            const productBrand = document.createElement('p');
+            productBrand.className = 'card-title brand-name';
+            productBrand.textContent = product.brandName;
+            productBody.appendChild(productBrand);
+
+            const productName = document.createElement('p');
+            productName.className = 'card-title';
+            productName.textContent = product.productName.toUpperCase();
+            productBody.appendChild(productName);
+
+            const qtyInfo = document.createElement('p');
+            qtyInfo.className = 'qty-info';
+            qtyInfo.textContent = `${product.quantity} ${product.qtyUnit}`; 
+            productBody.appendChild(qtyInfo);
+
+            const priceContainer = document.createElement('div');
+            priceContainer.className = 'price-container mb-2';
+
+            const originalPrice = parseFloat(product.originalPrice);
+            const finalPrice = parseFloat(product.finalPrice);
+
+            const originalPriceElement = document.createElement('span');
+            originalPriceElement.className = 'original-price';
+            originalPriceElement.innerHTML = `₹${Math.floor(originalPrice)}`;
+
+            const finalPriceElement = document.createElement('span');
+            finalPriceElement.className = 'final-price';
+            finalPriceElement.innerHTML = `₹${Math.floor(finalPrice)}`;
+
+            priceContainer.appendChild(originalPriceElement);
+            priceContainer.appendChild(finalPriceElement);
+            productBody.appendChild(priceContainer);
+
+            const qtyContainer = document.createElement('div');
+            qtyContainer.className = 'd-flex align-items-center qty-container mt-1';
+
+            const qtyLabel = document.createElement('span');
+            qtyLabel.textContent = 'QTY:';
+            qtyLabel.className = 'me-1';
+
+            const qtyDisplay = document.createElement('span');
+qtyDisplay.textContent = '1';
+qtyDisplay.className = 'qty-display-container me-1';
+// Function to check the initial quantity in the cart
+const checkInitialQuantity = async () => {
+    if (!currentUserUid) {
+        console.error('User is not logged in. Cannot check cart quantity.');
+        return;
+    }
+
+    const cartRef = ref(database, `carts/${currentUserUid}/${product.id}`);
+    try {
+        const cartSnapshot = await get(cartRef);
+        if (cartSnapshot.exists()) {
+            const cartItem = cartSnapshot.val();
+            qtyDisplay.textContent = cartItem.quantity; // Set the quantity display to the stored quantity
+        } else {
+            qtyDisplay.textContent = '1'; // Default to 1 if no item in cart
+        }
+    } catch (error) {
+        console.error('Error fetching cart quantity:', error);
+    }
+};
+
+// Call the function to check the initial quantity on load
+checkInitialQuantity();
+
+// Existing minus and plus button functionality
+const minusButton = document.createElement('button');
+const minusIcon = document.createElement('i');
+minusIcon.className = 'fa-solid fa-minus';
+minusIcon.style.fontSize = '0.5rem';
+minusButton.appendChild(minusIcon);
+minusButton.className = 'btn btn-secondary btn-sm me-1';
+minusButton.onclick = async () => {
+    let currentQty = parseInt(qtyDisplay.textContent);
+    if (currentQty > 1) {
+        currentQty--;
+        qtyDisplay.textContent = currentQty;
+        await updateCartQuantity(product, currentQty);
+    }
+};
+
+const plusButton = document.createElement('button');
+const plusIcon = document.createElement('i');
+plusIcon.className = 'fa-solid fa-plus';
+plusIcon.style.fontSize = '0.5rem';
+plusButton.appendChild(plusIcon);
+plusButton.className = 'btn btn-secondary btn-sm';
+plusButton.onclick = async () => {
+    let currentQty = parseInt(qtyDisplay.textContent);
+    const maxQty = Math.min(5, product.stockAvailable);
+    if (currentQty < maxQty) {
+        currentQty++;
+        qtyDisplay.textContent = currentQty;
+        await updateCartQuantity(product, currentQty);
+    }
+};
+
+// Function to update the cart quantity in Firebase
+async function updateCartQuantity(product, quantity) {
+    if (!currentUserUid) {
+        console.error('User is not logged in. Cannot update cart quantity.');
+        return;
+    }
+
+    const cartRef = ref(database, `carts/${currentUserUid}/${product.id}`);
+    try {
+        const cartItemSnapshot = await get(cartRef);
+        if (cartItemSnapshot.exists()) {
+            const cartItem = cartItemSnapshot.val();
+            cartItem.quantity = quantity;
+            cartItem.totalPrice = (cartItem.finalPrice * quantity).toFixed(2);
+            await set(cartRef, cartItem); // Update cart item
+            console.log(`Updated ${product.productName} quantity to ${quantity}.`);
+        }
+    } catch (error) {
+        console.error('Error updating item quantity in cart:', error);
+    }
+};
+
+
+
+            qtyContainer.appendChild(qtyLabel);
+            qtyContainer.appendChild(minusButton);
+            qtyContainer.appendChild(qtyDisplay);
+            qtyContainer.appendChild(plusButton);
+            productBody.appendChild(qtyContainer);
+
+            const addToCartButton = document.createElement('button');
+addToCartButton.className = 'btn-add-to-cart mt-2';
+addToCartButton.style.display = 'flex';
+addToCartButton.style.alignItems = 'center';
+addToCartButton.style.justifyContent = 'center';
+
+const cartIcon = document.createElement('i');
+cartIcon.className = 'fa-solid fa-basket-shopping fa-fade me-2';
+addToCartButton.appendChild(cartIcon);
+
+const buttonText = document.createTextNode('Add to Cart');
+addToCartButton.appendChild(buttonText);
+
+// Ensure product.id is set
+product.id = product.id || `product_${Math.random().toString(36).substr(2, 9)}`;
+
+// Function to check initial button state
+const checkCartStatus = async () => {
+    const cartRef = ref(database, `carts/${currentUserUid}/${product.id}`);
+    const cartSnapshot = await get(cartRef);
+    if (cartSnapshot.exists()) {
+        addToCartButton.style.backgroundColor = 'black';
+        buttonText.textContent = 'Remove Item';
+    }
+};
+
+// Call the function to check the cart status on load
+checkCartStatus();
+
+// Click event for addToCartButton
+addToCartButton.onclick = async () => {
+    const quantity = parseInt(qtyDisplay.textContent);
+    if (currentUserUid) {
+        try {
+            const cartRef = ref(database, `carts/${currentUserUid}/${product.id}`);
+            const cartSnapshot = await get(cartRef);
+            if (cartSnapshot.exists()) {
+                // Item exists in Firebase cart, remove it
+                await removeFromCart(product);
+                addToCartButton.style.backgroundColor = '';
+                buttonText.textContent = 'Add to Cart';
+            } else {
+                // Check if the product is still available in Firebase
+                const productRef = ref(database, `products/${product.id}`);
+                const productSnapshot = await get(productRef);
+                
+                if (productSnapshot.exists() && productSnapshot.val().quantity > 0) {
+                    // Item is available, add it to cart
+                    await addToCart(product, quantity);
+                    addToCartButton.style.backgroundColor = 'black';
+                    buttonText.textContent = 'Remove Item';
+                } else {
+                    console.error('Product is not available for adding to cart.');
+                    alert('This item is currently unavailable.');
+                }
+            }
+        } catch (error) {
+            console.error('Error checking cart status:', error);
+        }
+    } else {
+        console.error('User is not logged in. Cannot add to cart.');
+    }
+};
+
+            productBody.appendChild(addToCartButton);
+            productCard.appendChild(productBody);
+            productDisplay.appendChild(productCard);
+
+            const imgElement = productCard.querySelector('.card-img-top');
+            const imageLoadPromise = new Promise((resolve) => {
+                imgElement.onload = () => {
+                    imgElement.style.display = 'block';
+                    resolve();
+                };
+                imgElement.onerror = () => {
+                    imgElement.style.display = 'block';
+                    resolve();
+                };
+            });
+
+            imageLoadPromises.push(imageLoadPromise);
+        }
+
+        await Promise.all(imageLoadPromises);
+        hideSkeletonLoader();
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUserUid = user.uid;
+            console.log("User is logged in:", currentUserUid);
+
+            const userLocationSnapshot = await get(ref(database, `users/${currentUserUid}/location`));
+            if (userLocationSnapshot.exists()) {
+                const userLocation = userLocationSnapshot.val();
+                localStorage.setItem('userLocation', JSON.stringify(userLocation));
+                fetchProductsByCategory('Spices and Seasonings');
+            } else {
+                promptForLocation();
+            }
+        } else {
+            console.log("User is not logged in. Redirecting to index.html.");
+            window.location.href = "index.html"; 
+        }
+    });
+
+    async function addToCart(product, quantity) {
+    if (!currentUserUid) {
+        console.error('User is not logged in. Cannot add to cart.');
+        return;
+    }
+
+    if (!product.id) {
+        console.error('Product ID is undefined. Cannot add to cart.');
+        return;
+    }
+
+    const cartRef = ref(database, `carts/${currentUserUid}/${product.id}`);
+    const cartItem = {
+        productName: product.productName,
+        finalPrice: product.finalPrice,
+        quantity: parseInt(quantity),
+        totalPrice: (product.finalPrice * quantity).toFixed(2),
+        imageURL: product.imageURL,
+        productType: product.productType,
+        originalPrice: product.originalPrice,
+        qtyUnit: product.qtyUnit,
+        availableQuantity: product.quantity
+    };
+
+    try {
+        await set(cartRef, cartItem);
+        console.log(`Added ${quantity} of ${product.productName} to cart with ID ${product.id}.`);
+    } catch (error) {
+        console.error('Error adding item to cart:', error);
+    }
+}
+
+
+    async function removeFromCart(product) {
+        if (!currentUserUid) {
+            console.error('User is not logged in. Cannot remove from cart.');
+            return;
+        }
+
+        const cartRef = ref(database, `carts/${currentUserUid}/${product.id}`);
+         // Remove item from local storage
+         const cartItems = JSON.parse(localStorage.getItem('cartItems')) || {};
+        delete cartItems[product.id]; // Remove the item from local storage
+        localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Update local storage
+        try {
+            await remove(cartRef);
+            console.log(`Removed ${product.productName} from cart with ID ${product.id}.`);
+        } catch (error) {
+            console.error('Error removing item from cart:', error);
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DelightX</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@100;200;300;400;500;600;700;800;900&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Righteous&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            font-family: "Montserrat", sans-serif;
+        }
+        .navbar-brand {
+            font-family: "Righteous", sans-serif !important;
+        }
+        @media (min-width: 992px) {
+            .bottom-nav {
+                display: none; /* Hide bottom nav on larger screens */
+            }
+        }
+        .search-container {
+            margin-top: 10px;
+            padding: 0 15px;
+            position: relative; /* Position relative to contain suggestions */
+        }
+        .input-group {
+            width: 100%;
+        }
+        .input-group-text {
+            background-color: transparent;
+            border: none;
+        }
+        .suggestions-container {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            width: 100%;
+            margin-top: 5px;
+            display: none; /* Initially hidden */
+            position: absolute; /* Position suggestions below input */
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background: rgba(0, 128, 0, 0.1); /* Highlight on hover */
+        }
+        .close-icon {
+            cursor: pointer;
+            display: none; /* Initially hidden */
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .product-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .product-item img {
+            width: 50px; /* Set a fixed size for product images */
+            height: auto;
+            margin-right: 10px;
+        }
+        .recent-searches {
+            margin-top: 20px;
+        }
+        .recent-search-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .remove-icon {
+            cursor: pointer;
+            color: red;
+            margin-left: 10px;
+        }
+        .random-products {
+            margin-top: 20px;
+        }
+        .cart-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .quantity-button, .add-to-cart {
+            border: none;
+            border-radius: 4px;
+            padding: 3px 6px; /* Reduced padding */
+            cursor: pointer;
+            font-size: 14px; /* Smaller font size */
+            transition: background-color 0.3s;
+        }
+        .quantity-button {
+            background-color: #508D4E; /* Primary color */
+            color: white;
+            margin: 0 3px; /* Reduced margin */
+        }
+        .quantity-button:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+        .add-to-cart {
+            background-color: #1A5319; /* Success color */
+            color: white;
+            margin-left: 8px; /* Reduced margin */
+        }
+        .add-to-cart:hover {
+            background-color: #218838; /* Darker shade on hover */
+        }
+        input[type="number"] {
+            border: 0px solid #ffffff;
+            border-radius: 4px;
+            padding: 3px; /* Reduced padding */
+            text-align: center;
+            width: 40px; /* Adjusted width */
+            font-size: 14px; /* Smaller font size */
+        }
+        /* Responsive adjustments */
+.input-group-text {
+    flex: 0 0 auto; /* Prevent input from squeezing the search icon */
+}
+
+/* Hover effect for close icon */
+.close-icon {
+    opacity: 0;
+    transition: opacity 0.3s ease; /* Smooth transition for visibility */
+}
+
+.close-icon.show {
+    display: block; /* Use a class to control visibility */
+    opacity: 1; /* Fade in */
+}
+
+/* Focus styles for better accessibility */
+.quantity-button:focus, .add-to-cart:focus {
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.5); /* Custom focus effect */
+}
+
+/* Smooth display of suggestions */
+.suggestions-container {
+    transition: opacity 0.3s ease; /* Smooth fade effect */
+}
+.carousel {
+    margin-bottom: 70px; /* Adjust this value based on the height of your bottom nav */
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light d-lg-none">
+        <div class="container-fluid justify-content-between">
+            <a class="navbar-brand" href="#">DelightX</a>
+        </div>
+    </nav>
+    
+    <div class="search-container">
+        <div class="input-group">
+            <form id="searchForm" class="d-flex nav-search" onsubmit="return false;">
+                <span class="input-group-text bg-transparent border-end-0 search-icon">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" id="searchInput" class="form-control modern-search" placeholder="Search for products..." />
+                <span id="closeSearch" class="close-icon" onclick="clearSearch()">&times;</span>
+            </form>
+            <div id="suggestions" class="suggestions-container"></div>
+        </div>
+    </div>
+    
+
+    <div id="recentSearches" class="recent-searches container">
+        <h5>Recent Searches</h5>
+        <div id="recentSearchesList"></div>
+    </div>
+
+    <div id="selectedProduct" class="container random-products"></div>
+
+    <div id="randomProducts" class="container random-products">
+        <h5>Other Products You Might Like</h5>
+        <div id="randomProductsList"></div>
+    </div>
+    <div id="carouselExampleIndicators" class="carousel slide mt-5" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://cdn.zeptonow.com/production///tr:w-640,ar-970-560,pr-true,f-auto,q-80/inventory/banner/bd6d5804-7dac-4278-9cc5-2bdd509f4fec.png" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="https://cdn.zeptonow.com/production///tr:w-640,ar-969-559,pr-true,f-auto,q-80/inventory/banner/fdee09b3-17de-4af0-b340-1d7c33a3aa93.png" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item">
+                <img src="https://cdn.zeptonow.com/production///tr:w-640,ar-969-558,pr-true,f-auto,q-80/inventory/banner/c93ff78f-a583-497e-931e-ad3b4f7cd9e5.png" class="d-block w-100" alt="...">
+            </div>
+        </div>
+    </div>
+   
+    <nav class="navbar navbar-light bg-light fixed-bottom d-lg-none bottom-nav">
+        <div class="container-fluid justify-content-around">
+            <a class="nav-link text-center" href="#">
+                <i class="fas fa-home fa-lg"></i>
+                <div>Home</div>
+            </a>
+            <a class="nav-link text-center" href="DelightX-Profile.html">
+                <i class="fas fa-user fa-lg"></i>
+                <div>Profile</div>
+            </a>
+            <a class="nav-link text-center" href="#">
+                <i class="fas fa-ellipsis-h fa-lg"></i>
+                <div>More</div>
+            </a>
+            <a class="nav-link text-center" href="DelightX-Cart.html">
+                <i class="fas fa-shopping-cart fa-lg"></i>
+                <div>Cart</div>
+            </a>
+        </div>
+    </nav>
+   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+    import { getDatabase, ref, get, onValue, set } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyC7IZ7BhQPOy7CfEQLuJTOxdrTybBZTFO8",
+        authDomain: "delightx-in.firebaseapp.com",
+        databaseURL: "https://delightx-in-default-rtdb.firebaseio.com",
+        projectId: "delightx-in",
+        storageBucket: "delightx-in.appspot.com",
+        messagingSenderId: "554333595542",
+        appId: "1:554333595542:web:d445cd0bea3f1483c21fb7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth(app);
+
+    let suggestionsContainer = document.getElementById('suggestions');
+    let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+    let products = []; // Declare products array globally
+    let currentUserUid = null; // Declare currentUserUid at the top for global access
+    let userLocation = null; // Declare userLocation globally
+
+    const clearSearch = () => {
+        searchInput.value = ''; 
+        closeSearch.style.display = 'none'; 
+        suggestionsContainer.style.display = 'none'; 
+    };
+
+    const displayRecentSearches = () => {
+        const recentSearchesList = document.getElementById('recentSearchesList');
+        recentSearchesList.innerHTML = ''; 
+
+        recentSearches.forEach(search => {
+            const searchItem = document.createElement('div');
+            searchItem.className = 'recent-search-item';
+            searchItem.textContent = search;
+            searchItem.onclick = () => {
+                searchInput.value = search;
+                filterProducts();
+            };
+
+            const removeIcon = document.createElement('span');
+            removeIcon.className = 'remove-icon';
+            removeIcon.innerHTML = '&times;';
+            removeIcon.onclick = (e) => {
+                e.stopPropagation(); 
+                removeRecentSearch(search);
+            };
+
+            searchItem.appendChild(removeIcon);
+            recentSearchesList.appendChild(searchItem);
+        });
+    };
+
+    const removeRecentSearch = (search) => {
+        recentSearches = recentSearches.filter(item => item !== search);
+        localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+        displayRecentSearches();
+    };
+
+    const addToRecentSearches = (search) => {
+        if (!recentSearches.includes(search)) {
+            recentSearches.push(search);
+            localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+            displayRecentSearches();
+        }
+    };
+
+    window.addToCart = function(productName, price, quantityId, availableQuantity, imageURL, productType, productId) {
+        if (!productId) {
+            console.error("Product ID is undefined. Cannot add to cart.");
+            return; // Exit if productId is undefined
+        }
+
+        const quantityElement = document.getElementById(quantityId);
+        if (!quantityElement) {
+            console.error(`Element with ID ${quantityId} not found.`);
+            return; 
+        }
+
+        const quantity = parseInt(quantityElement.value) || 1; 
+
+        const cartItem = {
+            productName: productName,
+            originalPrice: price,
+            finalPrice: price,
+            quantity: quantity,
+            availableQuantity: availableQuantity || "180",
+            qtyUnit: "g",
+            totalPrice: (price * quantity).toFixed(2),
+            imageURL: imageURL || "https://example.com/image.jpg",
+            productType: productType || "bestPrice",
+            productId: productId 
+        };
+
+        let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        cartItems.push(cartItem);
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        console.log("Item added to local storage:", cartItem);
+
+        pushCartToFirebase(cartItem);
+    };
+
+    function pushCartToFirebase(cartItem) {
+        if (currentUserUid) {
+            const cartRef = ref(database, `carts/${currentUserUid}/${cartItem.productId}`); // Use cartItem.productId
+            set(cartRef, cartItem)
+                .then(() => {
+                    console.log('Cart item added to Firebase successfully.');
+                })
+                .catch((error) => {
+                    console.error('Error adding cart item to Firebase:', error);
+                });
+        } else {
+            console.error('User is not authenticated.');
+        }
+    }
+
+    // Make quantity functions globally accessible
+    window.increaseQuantity = function(quantityId) {
+        const quantityInput = document.getElementById(quantityId);
+        const currentQuantity = parseInt(quantityInput.value);
+
+        // Check if the current quantity is less than the maximum limit
+        if (currentQuantity < 5) {
+            quantityInput.value = currentQuantity + 1;
+        }
+    };
+
+    window.decreaseQuantity = function(quantityId) {
+        const quantityInput = document.getElementById(quantityId);
+        const currentQuantity = parseInt(quantityInput.value);
+
+        // Allow decreasing only if the quantity is greater than 1
+        if (currentQuantity > 1) {
+            quantityInput.value = currentQuantity - 1;
+        }
+    };
+
+    // User authentication state changed
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUserUid = user.uid; // Assign UID to the global variable
+            console.log("User is logged in:", currentUserUid);
+
+            const userLocationSnapshot = await get(ref(database, `users/${currentUserUid}/location`));
+            if (userLocationSnapshot.exists()) {
+                userLocation = userLocationSnapshot.val(); // Ensure userLocation is defined
+                localStorage.setItem('userLocation', JSON.stringify(userLocation));
+                fetchProducts();
+            }
+        } else {
+            console.log("User is not logged in. Redirecting to index.html.");
+            window.location.href = "index.html"; 
+        }
+    });
+    const fetchProducts = () => {
+    const productsRef = ref(database, 'products/');
+    onValue(productsRef, (snapshot) => {
+        if (snapshot.exists()) {
+            const fetchedProducts = snapshot.val();
+            products = Object.keys(fetchedProducts).map(key => ({
+                ...fetchedProducts[key],
+                id: key // Store the product ID
+            }));
+            displayFilteredProducts();
+        } else {
+            console.log("No products available.");
+        }
+    }, (error) => {
+        console.error(error);
+    });
+};
+
+    const getDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371; // Radius of the Earth in kilometers
+        const dLat = (lat2 - lat1) * (Math.PI / 180);
+        const dLon = (lon2 - lon1) * (Math.PI / 180);
+        const a = 
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * 
+            Math.sin(dLon / 2) * Math.sin(dLon / 2); 
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+        return R * c; // Distance in kilometers
+    };
+
+    const displayFilteredProducts = () => {
+        const filteredProducts = Object.values(products).filter(product => {
+            if (product.latitude && product.longitude && userLocation) {
+                const productLat = parseFloat(product.latitude);
+                const productLon = parseFloat(product.longitude);
+                const distance = getDistance(userLocation.latitude, userLocation.longitude, productLat, productLon);
+                return distance < 1; // Filter products within 1 km
+            }
+            return false;
+        });
+
+        if (filteredProducts.length > 0) {
+            displayRandomProducts(filteredProducts);
+        } else {
+            console.log("No products found within 1 km.");
+        }
+    };
+
+    // Function to check if a product is in the cart
+    function isProductInCart(productName) {
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        return cartItems.some(item => item.productName === productName);
+    }
+
+    function renderSelectedProduct(product) {
+        const selectedProductContainer = document.getElementById('selectedProduct');
+        const inCart = isProductInCart(product.productName);
+
+        selectedProductContainer.innerHTML = `
+            <h5>Selected Product:</h5>
+            <div class="product-item">
+                <img src="${product.imageURL}" alt="${product.productName}">
+                <div>
+                    <strong>${product.productName}</strong><br>
+                    <small>Price: ₹${product.finalPrice} (${product.availability})</small>
+                </div>
+                <div class="cart-controls">
+                    <button class="quantity-button" onclick="decreaseQuantity('selected-quantity')" ${inCart ? 'disabled' : ''}>-</button>
+                    <input type="number" id="selected-quantity" value="${inCart ? getCartQuantity(product.productName) : 1}" min="1" max="5" style="width: 40px; text-align: center;" ${inCart ? 'readonly' : ''}>
+                    <button class="quantity-button" onclick="increaseQuantity('selected-quantity')" ${inCart ? 'disabled' : ''}>+</button>
+                    <button class="add-to-cart" onclick="${inCart ? '' : `addToCart('${product.productName}', ${product.finalPrice}, 'selected-quantity', '${product.quantity}', '${product.imageURL}', '${product.productType}', '${product.id || product.productId}')`}" ${inCart ? 'disabled' : ''}>
+                        ${inCart ? 'In Cart' : 'Add to Cart'}
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    // Function to get the quantity of a product in the cart
+    function getCartQuantity(productName) {
+        const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+        const item = cartItems.find(item => item.productName === productName);
+        return item ? item.quantity : 1; // Return the item's quantity or default to 1
+    }
+
+    const displayRandomProducts = (filteredProducts) => {
+        const randomProductsList = document.getElementById('randomProductsList');
+        randomProductsList.innerHTML = '';
+
+        const randomSelection = filteredProducts.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+        randomSelection.forEach((product, index) => {
+            const inCart = isProductInCart(product.productName);
+
+            const item = document.createElement('div');
+            item.className = 'product-item';
+            item.innerHTML = `
+                <img src="${product.imageURL}" alt="${product.productName}">
+                <div>
+                    <strong>${product.productName}</strong><br>
+                    <small>Price: ₹${product.finalPrice} (${product.availability})</small>
+                    <div class="cart-controls">
+                        <button class="quantity-button" onclick="decreaseQuantity('quantity-${index}')" ${inCart ? 'disabled' : ''}>-</button>
+                        <input type="number" id="quantity-${index}" value="${inCart ? getCartQuantity(product.productName) : 1}" min="1" max="5" style="width: 40px; text-align: center;" ${inCart ? 'readonly' : ''}>
+                        <button class="quantity-button" onclick="increaseQuantity('quantity-${index}')" ${inCart ? 'disabled' : ''}>+</button>
+                        <button class="add-to-cart" onclick="${inCart ? '' : `addToCart('${product.productName}', ${product.finalPrice}, 'quantity-${index}', '${product.quantity}', '${product.imageURL}', '${product.productType}', '${product.id || product.productId}')`}" ${inCart ? 'disabled' : ''}>
+                            ${inCart ? 'In Cart' : 'Add to Cart'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            randomProductsList.appendChild(item);
+        });
+    };
+
+    function filterProducts() {
+        const searchTerm = searchInput.value.toLowerCase();
+        
+        const suggestions = Object.values(products).filter(product => 
+            product.productName && product.productName.toLowerCase().includes(searchTerm)
+        );
+
+        showSuggestions(suggestions);
+    }
+
+    function showSuggestions(suggestions) {
+        suggestionsContainer.innerHTML = '';
+
+        if (suggestions.length === 0) {
+            suggestionsContainer.style.display = 'none'; 
+            return;
+        }
+
+        suggestions.forEach(product => {
+            const item = document.createElement('div');
+            item.className = 'suggestion-item';
+
+            const productDiv = document.createElement('div');
+            productDiv.className = 'product-item';
+            productDiv.innerHTML = `
+                <img src="${product.imageURL}" alt="${product.productName}">
+                <div>
+                    <strong>${product.productName}</strong><br>
+                    <small>Price: ₹${product.finalPrice} (${product.availability})</small>
+                </div>
+            `;
+
+            item.appendChild(productDiv);
+            item.onclick = () => {
+                searchInput.value = product.productName;
+                suggestionsContainer.style.display = 'none';
+                renderSelectedProduct(product);
+                addToRecentSearches(product.productName);
+            };
+
+            suggestionsContainer.appendChild(item);
+        });
+
+        suggestionsContainer.style.display = 'block';
+    }
+
+    searchInput.addEventListener('input', () => {
+        if (searchInput.value) {
+            closeSearch.style.display = 'block'; 
+            filterProducts();
+        } else {
+            closeSearch.style.display = 'none'; 
+            suggestionsContainer.style.display = 'none'; 
+        }
+    });
+
+    searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); 
+            suggestionsContainer.style.display = 'none'; 
+        }
+    });
+
+    displayRecentSearches(); 
+</script>
+
+</body>
+</html>
