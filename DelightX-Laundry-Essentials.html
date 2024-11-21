@@ -533,7 +533,7 @@ font-family: "Righteous", sans-serif !important;
             const productLon = parseFloat(products[key].longitude);
             const distance = calculateDistance(lat, lon, productLat, productLon);
             
-            if (distance <= 10 && products[key].category === category) {
+            if (distance <= 100 && products[key].category === category) {
                 const product = {
                     id: key,
                     availability: products[key].availability,
